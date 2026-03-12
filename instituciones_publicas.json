@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ip_demo_01",
+    "nombre": "Institución Pública Demo 01"
+  },
+  {
+    "id": "ip_demo_02",
+    "nombre": "Institución Pública Demo 02"
+  },
+  {
+    "id": "ip_demo_03",
+    "nombre": "Institución Pública Demo 03"
+  },
+  {
+    "id": "ip_demo_04",
+    "nombre": "Institución Pública Demo 04"
+  },
+  {
+    "id": "ip_demo_05",
+    "nombre": "Institución Pública Demo 05"
+  },
+  {
+    "id": "ip_demo_06",
+    "nombre": "Entidad Pública Demo 06"
+  },
+  {
+    "id": "ip_demo_07",
+    "nombre": "Entidad Pública Demo 07"
+  },
+  {
+    "id": "ip_demo_08",
+    "nombre": "Entidad Pública Demo 08"
+  },
+  {
+    "id": "ip_demo_09",
+    "nombre": "Programa Público Demo 09"
+  },
+  {
+    "id": "ip_demo_10",
+    "nombre": "Programa Público Demo 10"
+  },
+  {
+    "id": "ip_demo_11",
+    "nombre": "Unidad Ejecutora Demo 11"
+  },
+  {
+    "id": "ip_demo_12",
+    "nombre": "Unidad Ejecutora Demo 12"
+  }
+]
