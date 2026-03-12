@@ -1,26 +1,26 @@
 [
   {
     "id": "mo_demo_01",
-    "nombre": "Misión de Observación Demo 01"
+    "nombre": "Misión de Observación 1"
   },
   {
     "id": "mo_demo_02",
-    "nombre": "Misión de Observación Demo 02"
+    "nombre": "Misión de Observación 2"
   },
   {
     "id": "mo_demo_03",
-    "nombre": "Misión de Observación Demo 03"
+    "nombre": "Misión de Observación 3"
   },
   {
     "id": "mo_demo_04",
-    "nombre": "Misión de Observación Demo 04"
+    "nombre": "Misión de Observación 4"
   },
   {
     "id": "mo_demo_05",
-    "nombre": "Misión de Observación Demo 05"
+    "nombre": "Misión de Observación 5"
   },
   {
     "id": "mo_demo_06",
-    "nombre": "Misión de Observación Demo 06"
+    "nombre": "Misión de Observación 6"
   }
 ]
