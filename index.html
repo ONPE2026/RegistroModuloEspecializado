@@ -656,13 +656,13 @@
         }
 
         if (!nombre) {
-          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona responsable del registro.' });
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos completos.' });
         } else if (nombre.length < 5) {
-          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese el nombre completo de la persona responsable del registro.' });
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos completos.' });
         }
 
         if (!cel) {
-          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular.' });
         } else if (!/^\d{9}$/.test(cel)) {
           errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido de 9 dígitos.' });
         }
