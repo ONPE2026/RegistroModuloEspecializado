@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <base target="_top" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Encuesta EG 2026 - ONPE</title>
-
+    <title>Registro para el módulo especializado - EG 2026</title>
     <style>
       :root {
         --onpe-azul: #003366;
         --onpe-azul-claro: #e6ecf7;
+        --onpe-borde-error: #c41e32;
+        --onpe-fondo-error: #fff1f3;
+        --onpe-texto-error: #8a1022;
+        --onpe-verde: #0a7f5a;
       }
+
+      * { box-sizing: border-box; }
 
       body {
         font-family: Arial, sans-serif;
@@ -20,17 +23,21 @@
         margin: 0 auto;
         line-height: 1.4;
         background-color: #f5f7fb;
+        color: #1f2937;
       }
 
       h1 {
         margin-bottom: 5px;
         color: var(--onpe-azul);
         text-align: center;
+        font-size: 1.8rem;
       }
 
       h2 {
         margin-bottom: 5px;
       }
+
+      p { margin-top: 0.75rem; }
 
       fieldset {
         margin-top: 15px;
@@ -53,19 +60,23 @@
       .inline-label {
         display: inline-block;
         margin-right: 15px;
-      }
-
-      .grupo-etario label {
-        display: block;
-        margin-top: 4px;
+        margin-top: 10px;
       }
 
       select,
       input[type="text"],
+      input[type="email"],
       button {
-        padding: 5px;
+        padding: 8px 10px;
         margin-top: 5px;
-        min-width: 200px;
+        min-width: 220px;
+        border: 1px solid #c7d3e5;
+        border-radius: 4px;
+        font-size: 0.98rem;
+      }
+
+      input[type="radio"] {
+        margin-right: 6px;
       }
 
       .seccion-oculta {
@@ -74,7 +85,7 @@
 
       .boton {
         margin-top: 20px;
-        padding: 10px 18px;
+        padding: 12px 18px;
         font-size: 1rem;
         cursor: pointer;
         background-color: var(--onpe-azul);
@@ -84,7 +95,12 @@
       }
 
       .boton:hover {
-        opacity: 0.9;
+        opacity: 0.92;
+      }
+
+      .boton:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
       }
 
       .mensaje {
@@ -100,11 +116,130 @@
         display: block;
       }
 
+      .opciones-verticales label {
+        display: block;
+        margin-top: 6px;
+      }
+
+      .campo {
+        margin-top: 12px;
+      }
+
+      .campo.tiene-error select,
+      .campo.tiene-error input,
+      .campo.tiene-error .grupo-radios {
+        border-color: var(--onpe-borde-error);
+      }
+
+      .grupo-radios {
+        margin-top: 6px;
+        padding: 4px 0;
+      }
+
+      .field-error {
+        display: none;
+        margin-top: 6px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        background-color: var(--onpe-fondo-error);
+        color: var(--onpe-texto-error);
+        font-size: 0.93rem;
+      }
+
+      .field-error.activo {
+        display: block;
+      }
+
+      .nota {
+        margin-top: 4px;
+        color: #4b5563;
+        font-size: 0.9rem;
+      }
+
+      .progress-wrap {
+        margin-top: 18px;
+        background: #ffffff;
+        border: 1px solid var(--onpe-azul-claro);
+        border-radius: 5px;
+        padding: 12px 15px;
+      }
+
+      .progress-label-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+        color: var(--onpe-azul);
+        font-weight: bold;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #dde6f4;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        width: 0%;
+        height: 100%;
+        background: var(--onpe-azul);
+        transition: width 0.25s ease;
+      }
+
+      .mensaje-global {
+        display: none;
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+
+      .mensaje-global.error {
+        display: block;
+        background: var(--onpe-fondo-error);
+        color: var(--onpe-texto-error);
+      }
+
+      .mensaje-global.ok {
+        display: block;
+        background: #edf9f3;
+        color: var(--onpe-verde);
+      }
+
+      .pantalla-final {
+        max-width: 800px;
+        margin: 40px auto;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #ffffff;
+        border: 1px solid var(--onpe-azul-claro);
+        border-radius: 6px;
+        padding: 28px 20px;
+      }
+
+      .pantalla-final h1 {
+        margin-top: 0;
+      }
+
+      .iframe-oculto {
+        width: 0;
+        height: 0;
+        border: 0;
+        visibility: hidden;
+        position: absolute;
+      }
+
       /* 📱 Ajustes para celular */
       @media (max-width: 600px) {
         body {
           padding: 10px;
           font-size: 15px;
+        }
+
+        h1 {
+          font-size: 1.45rem;
         }
 
         fieldset {
@@ -113,731 +248,712 @@
 
         select,
         input[type="text"],
+        input[type="email"],
         button {
           width: 100%;
           min-width: 0;
-          box-sizing: border-box;
         }
 
         .inline-label {
           display: block;
           margin-right: 0;
-          margin-top: 6px;
+          margin-top: 8px;
         }
 
-        .grupo-etario label {
-          margin-top: 6px;
+        .progress-label-row {
+          font-size: 0.95rem;
         }
       }
     </style>
   </head>
 
   <body>
-    <h1>Encuesta sobre campañas informativas</h1>
+    <h1>Registro para el módulo especializado de la web de resultados de las Elecciones Generales 2026</h1>
 
     <img
-  src="https://onpe2026.github.io/Encuesta/banner.jpg"
-  alt="Banner ONPE EG 2026"
-  class="banner"
+      src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
+      alt="Banner ONPE EG 2026"
+      class="banner"
     />
 
-    <p>Por favor, responda las siguientes preguntas.</p>
+    <p>Complete la siguiente información. Todas las preguntas son obligatorias.</p>
 
-    <!-- ==========================
-         DATOS GENERALES
-         ========================== -->
-    <fieldset>
-      <legend>Datos generales</legend>
-
-      <!-- Grupo etario -->
-      <label>1. Indique su grupo etario</label>
-      <div class="grupo-etario">
-        <label>
-          <input type="radio" name="grupoEtario" value="18-29" />
-          De 18 a 29 años
-        </label>
-        <label>
-          <input type="radio" name="grupoEtario" value="30-44" />
-          De 30 a 44 años
-        </label>
-        <label>
-          <input type="radio" name="grupoEtario" value="45-59" />
-          De 45 a 59 años
-        </label>
-        <label>
-          <input type="radio" name="grupoEtario" value="60+" />
-          De 60 a más
-        </label>
+    <div class="progress-wrap" aria-live="polite">
+      <div class="progress-label-row">
+        <span>Avance del registro</span>
+        <span id="progressText">0%</span>
       </div>
-
-      <h2>Lugar de residencia</h2>
-
-      <label for="region">2. Indique su región de residencia</label>
-      <select id="region">
-        <option value="">-- Seleccione región --</option>
-      </select>
-
-      <label for="provincia">3. Indique su provincia de residencia</label>
-      <select id="provincia" disabled>
-        <option value="">-- Seleccione provincia --</option>
-      </select>
-
-      <label for="distrito">4. Indique su distrito de residencia</label>
-      <select id="distrito" disabled>
-        <option value="">-- Seleccione distrito --</option>
-      </select>
-
-    </fieldset>
-
-    <!-- ==========================
-         PUBLICIDAD ONPE
-         ========================== -->
-    <fieldset>
-      <legend>Sobre las campañas informativas de la ONPE</legend>
-
-      <label>5. ¿Ha visto alguna campaña informativa de la ONPE sobre las Elecciones Generales?</label>
-      <label class="inline-label">
-        <input type="radio" name="publicidadONPE" value="Sí" /> Sí
-      </label>
-      <label class="inline-label">
-        <input type="radio" name="publicidadONPE" value="No" /> No
-      </label>
-
-      <div id="seccionMediosPublicidad" class="seccion-oculta">
-        <label>6. ¿A través de qué medios?</label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="Carteles" />
-          Carteles
-        </label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="Centros comerciales" />
-          Centros comerciales
-        </label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="TV" />
-          TV
-        </label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="Radio" />
-          Radio
-        </label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="Correo electrónico" />
-          Correo electrónico
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="mediosPublicidadONPE"
-            value="En persona (espacios públicos)"
-          />
-          En persona (espacios públicos)
-        </label>
-        <label>
-          <input type="checkbox" name="mediosPublicidadONPE" value="Redes sociales" />
-          Redes sociales
-        </label>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
       </div>
+    </div>
 
-<div id="bloqueP7" class="seccion-oculta">
-  <label id="p7">
-    7. En una escala del 1 al 5, donde 1 es “Nada claro” y 5 es “Muy claro”,
-    ¿qué tan claro le resultó el mensaje de las campañas informativas de la ONPE?
-  </label>
-  <label class="inline-label">
-    <input type="radio" name="claridadONPE" value="1" /> 1 – Nada claro
-  </label>
-  <label class="inline-label">
-    <input type="radio" name="claridadONPE" value="2" /> 2 – Poco claro
-  </label>
-  <label class="inline-label">
-    <input type="radio" name="claridadONPE" value="3" /> 3 – Ni claro ni confuso
-  </label>
-  <label class="inline-label">
-    <input type="radio" name="claridadONPE" value="4" /> 4 – Algo claro
-  </label>
-  <label class="inline-label">
-    <input type="radio" name="claridadONPE" value="5" /> 5 – Muy claro
-  </label>
-</div>
-    </fieldset>
+    <form id="formRegistro" novalidate>
+      <fieldset>
+        <legend>Datos de la institución o entidad</legend>
 
-    <!-- ==========================
-         SECCIÓN ETLV
-         ========================== -->
-  <div id="bloqueETLV" class="seccion-oculta">
-    <fieldset>
-      <legend>Sobre el local de votación y la plataforma “Elige tu Local de Votación”</legend>
-
-      <label>8. ¿Sabe que pudo elegir su local de votación?</label>
-      <label class="inline-label">
-        <input type="radio" name="sabePuedeElegirLocal" value="Sí" /> Sí
-      </label>
-      <label class="inline-label">
-        <input type="radio" name="sabePuedeElegirLocal" value="No" /> No
-      </label>
-
-      <label>9. ¿Supo de la plataforma “Elige tu Local de Votación” (ETLV)?</label>
-      <label class="inline-label">
-        <input type="radio" name="supoETLV" value="Sí" /> Sí
-      </label>
-      <label class="inline-label">
-        <input type="radio" name="supoETLV" value="No" /> No
-      </label>
-
-      <div id="seccionETLV" class="seccion-oculta">
-        <label>10. ¿Ingresó a la plataforma “Elige tu Local de Votación”?</label>
-        <label class="inline-label">
-          <input type="radio" name="haAccedidoETLV" value="Sí" /> Sí
-        </label>
-        <label class="inline-label">
-          <input type="radio" name="haAccedidoETLV" value="No" /> No
-        </label>
-
-        <div id="seccionAccesoETLV" class="seccion-oculta">
-          <label>11. ¿Pudo elegir su local de votación exitosamente?</label>
-          <label class="inline-label">
-            <input type="radio" name="haCambiadoLocal" value="Sí" /> Sí
-          </label>
-          <label class="inline-label">
-            <input type="radio" name="haCambiadoLocal" value="No" /> No
-          </label>
-
-          <label>
-            12. Al usar la plataforma “Elige tu Local de Votación”, ¿experimentó alguno de
-            los siguientes problemas? (puede marcar más de una opción)
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas para ingresar a la plataforma"
-            />
-            Problemas para ingresar a la plataforma
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas con las preguntas personales"
-            />
-            Problemas con las preguntas personales
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas con el reconocimiento facial"
-            />
-            Problemas con el reconocimiento facial
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas con la toma de foto de DNI"
-            />
-            Problemas con la toma de foto de DNI
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas con el correo electrónico"
-            />
-            Problemas con el correo electrónico
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="problemasETLV"
-              value="Problemas al ubicar el local de votación"
-            />
-            Problemas al ubicar el local de votación
-          </label>
-          <label>
-            <input type="checkbox" name="problemasETLV" value="Bloqueo de cuenta" />
-            Bloqueo de cuenta
-          </label>
-          <label>
-            <input type="checkbox" name="problemasETLV" value="Problemas con atención de personal de ONPE" />
-            Problemas con atención de personal de ONPE
-          </label>
-          <label>
-            <input type="checkbox" name="problemasETLV" value="No tuve problemas" />
-            No tuve problemas
-          </label>
+        <div class="campo" id="campoTipoInstitucion">
+          <label>1. Seleccione el tipo de institución o entidad que realiza el registro</label>
+          <div class="grupo-radios opciones-verticales">
+            <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Instituciones y entidades públicas</label>
+            <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
+            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
+            <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
+          </div>
+          <div class="field-error"></div>
         </div>
-      </div>
-    </fieldset>
-  </div>
 
-    <button id="btnEnviar" class="boton">Enviar</button>
-    <div id="mensaje" class="mensaje"></div>
+        <div class="campo seccion-oculta" id="campoEntidadSeleccion">
+          <label id="labelEntidadSeleccion" for="entidadSeleccion">2. Seleccione una opción</label>
+          <select id="entidadSeleccion">
+            <option value="">-- Seleccione una opción --</option>
+          </select>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo seccion-oculta" id="campoRucInstitucion">
+          <label for="rucInstitucion">3. Ingrese el RUC de la institución o entidad</label>
+          <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
+          <div class="nota">Debe registrar los 11 dígitos del RUC.</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo seccion-oculta" id="campoPaisMision">
+          <label for="paisMision">4. Seleccione el país de la misión de observación</label>
+          <select id="paisMision">
+            <option value="">-- Seleccione un país --</option>
+          </select>
+          <div class="field-error"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Datos de la persona responsable del registro</legend>
+
+        <div class="campo" id="campoTipoDocumento">
+          <label for="tipoDocumento">5. Seleccione el tipo de documento de identidad</label>
+          <select id="tipoDocumento">
+            <option value="">-- Seleccione el tipo de documento --</option>
+            <option value="dni_cedula">DNI / Cédula de identidad</option>
+            <option value="carnet_extranjeria">Carnet de Extranjería</option>
+          </select>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoNumeroDocumento">
+          <label for="numeroDocumento">6. Ingrese el número de documento de identidad</label>
+          <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoNombreCompleto">
+          <label for="nombreCompleto">7. Ingrese los nombres y apellidos de la persona responsable del registro</label>
+          <input id="nombreCompleto" type="text" maxlength="150" autocomplete="name" />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoCelular">
+          <label for="celular">8. Ingrese el número de celular</label>
+          <input id="celular" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoConfirmarCelular">
+          <label for="confirmarCelular">9. Confirme el número de celular</label>
+          <input id="confirmarCelular" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoCorreo">
+          <label for="correoElectronico">10. Ingrese el correo electrónico</label>
+          <input id="correoElectronico" type="email" maxlength="150" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoConfirmarCorreo">
+          <label for="confirmarCorreoElectronico">11. Confirme el correo electrónico</label>
+          <input id="confirmarCorreoElectronico" type="email" maxlength="150" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
+          <div class="field-error"></div>
+        </div>
+      </fieldset>
+
+      <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
+      <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
+    </form>
+
+    <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
     <script>
-      // 👉 Pon aquí la URL de TU Web App de Apps Script (la que termina en /exec)
-      const API_URL =
-        'https://script.google.com/macros/s/AKfycbzJRa9CoWFL8Tn06e72rWalbwGZH0YpdJsfsL5LRnp7LQtkm7sLZ24MR_XdiKC6InHtAA/exec';
+      // Reemplaza esta URL por la de tu Web App de Apps Script (/exec)
+      const API_URL = 'PEGAR_AQUI_URL_WEB_APP';
 
-  // Nombres de archivos JSON por región en /ubigeo/
-  const REGIONES = [
-    'EXTRANJERO',
-    'AMAZONAS',
-    'ANCASH',
-    'APURIMAC',
-    'AREQUIPA',
-    'AYACUCHO',
-    'CAJAMARCA',
-    'CALLAO',
-    'CUSCO',
-    'HUANCAVELICA',
-    'HUANUCO',
-    'ICA',
-    'JUNIN',
-    'LA LIBERTAD',
-    'LAMBAYEQUE',
-    'LIMA',
-    'LORETO',
-    'MADRE DE DIOS',
-    'MOQUEGUA',
-    'PASCO',
-    'PIURA',
-    'PUNO',
-    'SAN MARTIN',
-    'TACNA',
-    'TUMBES',
-    'UCAYALI'
-  ];
+      // Si alojas el HTML y los JSON en la misma carpeta, no cambies esta ruta.
+      const LISTAS_BASE_PATH = './';
 
-  const ubigeoRegionCache = {};
-  let distritosActuales = {};
+      const JSON_FILES = {
+        institucion_publica: 'instituciones_publicas.json',
+        organizacion_politica: 'organizaciones_politicas.json',
+        mision_observacion: 'misiones_observacion.json',
+        encuestadora_vigente: 'encuestadoras_vigentes.json',
+        paises: 'paises.json'
+      };
 
-  // 🔑 Clave en localStorage para marcar que ya respondió
-  const STORAGE_KEY = 'encuesta_eg2026_respondida_v3';
+      const LABELS_ENTIDAD = {
+        institucion_publica: '2. Seleccione el nombre de la institución o entidad pública',
+        organizacion_politica: '2. Seleccione la organización política',
+        mision_observacion: '2. Seleccione la misión de observación',
+        encuestadora_vigente: '2. Seleccione la encuestadora vigente'
+      };
 
-  window.onload = function () {
-    // ✅ Si ya respondió en este navegador, solo mostramos el mensaje final
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === '1') {
+      const PLACEHOLDERS_ENTIDAD = {
+        institucion_publica: '-- Seleccione la institución o entidad pública --',
+        organizacion_politica: '-- Seleccione la organización política --',
+        mision_observacion: '-- Seleccione la misión de observación --',
+        encuestadora_vigente: '-- Seleccione la encuestadora vigente --'
+      };
+
+      const state = {
+        catalogos: {},
+        pendingRequests: new Map()
+      };
+
+      const form = document.getElementById('formRegistro');
+      const btnEnviar = document.getElementById('btnEnviar');
+      const mensajeGlobal = document.getElementById('mensajeGlobal');
+      const progressText = document.getElementById('progressText');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const progressBar = document.querySelector('.progress-bar');
+
+      const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
+      const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
+      const campoRucInstitucion = document.getElementById('campoRucInstitucion');
+      const campoPaisMision = document.getElementById('campoPaisMision');
+
+      const entidadSeleccion = document.getElementById('entidadSeleccion');
+      const labelEntidadSeleccion = document.getElementById('labelEntidadSeleccion');
+      const rucInstitucion = document.getElementById('rucInstitucion');
+      const paisMision = document.getElementById('paisMision');
+      const tipoDocumento = document.getElementById('tipoDocumento');
+      const numeroDocumento = document.getElementById('numeroDocumento');
+      const nombreCompleto = document.getElementById('nombreCompleto');
+      const celular = document.getElementById('celular');
+      const confirmarCelular = document.getElementById('confirmarCelular');
+      const correoElectronico = document.getElementById('correoElectronico');
+      const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
+
+      window.addEventListener('load', inicializar);
+      window.addEventListener('message', manejarRespuestaIframe);
+
+      async function inicializar() {
+        try {
+          await cargarCatalogos();
+          configurarEventos();
+          actualizarCamposCondicionales();
+          actualizarBarraProgreso();
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeGlobal('Ocurrió un problema al cargar las listas del formulario. Revise las rutas de los archivos JSON e intente nuevamente.', 'error');
+          btnEnviar.disabled = true;
+        }
+      }
+
+      async function cargarCatalogos() {
+        const entries = Object.entries(JSON_FILES);
+        const resultados = await Promise.all(
+          entries.map(async ([key, file]) => {
+            const response = await fetch(LISTAS_BASE_PATH + file, { cache: 'no-store' });
+            if (!response.ok) {
+              throw new Error('No se pudo cargar ' + file);
+            }
+            return [key, await response.json()];
+          })
+        );
+
+        resultados.forEach(([key, data]) => {
+          state.catalogos[key] = Array.isArray(data) ? data : [];
+        });
+
+        poblarPaises();
+      }
+
+      function configurarEventos() {
+        document.querySelectorAll('input[name="tipoInstitucion"]').forEach((radio) => {
+          radio.addEventListener('change', () => {
+            limpiarError(campoTipoInstitucion);
+            actualizarCamposCondicionales();
+            actualizarBarraProgreso();
+          });
+        });
+
+        entidadSeleccion.addEventListener('change', () => {
+          limpiarError(campoEntidadSeleccion);
+          actualizarBarraProgreso();
+        });
+
+        rucInstitucion.addEventListener('input', () => {
+          rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
+          limpiarError(campoRucInstitucion);
+          actualizarBarraProgreso();
+        });
+
+        paisMision.addEventListener('change', () => {
+          limpiarError(campoPaisMision);
+          actualizarBarraProgreso();
+        });
+
+        tipoDocumento.addEventListener('change', () => {
+          limpiarError(document.getElementById('campoTipoDocumento'));
+          actualizarBarraProgreso();
+        });
+
+        numeroDocumento.addEventListener('input', () => {
+          numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
+          limpiarError(document.getElementById('campoNumeroDocumento'));
+          actualizarBarraProgreso();
+        });
+
+        nombreCompleto.addEventListener('input', () => {
+          limpiarError(document.getElementById('campoNombreCompleto'));
+          actualizarBarraProgreso();
+        });
+
+        [celular, confirmarCelular].forEach((input) => {
+          input.addEventListener('input', () => {
+            input.value = soloDigitos(input.value).slice(0, 15);
+            limpiarError(input.closest('.campo'));
+            actualizarBarraProgreso();
+          });
+          bloquearPegado(input);
+        });
+
+        [correoElectronico, confirmarCorreoElectronico].forEach((input) => {
+          input.addEventListener('input', () => {
+            limpiarError(input.closest('.campo'));
+            actualizarBarraProgreso();
+          });
+          bloquearPegado(input);
+        });
+
+        form.addEventListener('submit', enviarFormulario);
+      }
+
+      function bloquearPegado(input) {
+        ['paste', 'drop'].forEach((eventName) => {
+          input.addEventListener(eventName, (event) => {
+            event.preventDefault();
+          });
+        });
+      }
+
+      function actualizarCamposCondicionales() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const mostrarEntidad = Boolean(tipo);
+        const mostrarRuc = tipo === 'institucion_publica' || tipo === 'encuestadora_vigente';
+        const mostrarPais = tipo === 'mision_observacion';
+
+        toggleSeccion(campoEntidadSeleccion, mostrarEntidad);
+        toggleSeccion(campoRucInstitucion, mostrarRuc);
+        toggleSeccion(campoPaisMision, mostrarPais);
+
+        if (mostrarEntidad) {
+          poblarEntidad(tipo);
+        } else {
+          entidadSeleccion.innerHTML = '<option value="">-- Seleccione una opción --</option>';
+        }
+
+        if (!mostrarRuc) {
+          rucInstitucion.value = '';
+          limpiarError(campoRucInstitucion);
+        }
+
+        if (!mostrarPais) {
+          paisMision.value = '';
+          limpiarError(campoPaisMision);
+        }
+      }
+
+      function toggleSeccion(elemento, visible) {
+        elemento.classList.toggle('seccion-oculta', !visible);
+      }
+
+      function poblarEntidad(tipo) {
+        const lista = state.catalogos[tipo] || [];
+        labelEntidadSeleccion.textContent = LABELS_ENTIDAD[tipo] || '2. Seleccione una opción';
+
+        entidadSeleccion.innerHTML = '';
+        const optionDefault = document.createElement('option');
+        optionDefault.value = '';
+        optionDefault.textContent = PLACEHOLDERS_ENTIDAD[tipo] || '-- Seleccione una opción --';
+        entidadSeleccion.appendChild(optionDefault);
+
+        lista.forEach((item) => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.nombre;
+          entidadSeleccion.appendChild(option);
+        });
+      }
+
+      function poblarPaises() {
+        const lista = state.catalogos.paises || [];
+        paisMision.innerHTML = '<option value="">-- Seleccione un país --</option>';
+        lista.forEach((item) => {
+          const option = document.createElement('option');
+          option.value = item.codigo;
+          option.textContent = item.nombre;
+          paisMision.appendChild(option);
+        });
+      }
+
+      function obtenerTipoInstitucionSeleccionado() {
+        const checked = document.querySelector('input[name="tipoInstitucion"]:checked');
+        return checked ? checked.value : '';
+      }
+
+      function getEntidadSeleccionada() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const lista = state.catalogos[tipo] || [];
+        const id = entidadSeleccion.value;
+        const encontrado = lista.find((item) => item.id === id);
+        return encontrado || null;
+      }
+
+      function getPaisSeleccionado() {
+        const codigo = paisMision.value;
+        const lista = state.catalogos.paises || [];
+        return lista.find((item) => item.codigo === codigo) || null;
+      }
+
+      function soloDigitos(valor) {
+        return String(valor || '').replace(/\D+/g, '');
+      }
+
+      function valorLimpio(valor) {
+        return String(valor || '').trim();
+      }
+
+      function normalizarCorreo(valor) {
+        return valorLimpio(valor).toLowerCase();
+      }
+
+      function esCorreoValido(valor) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+      }
+
+      function mostrarError(campo, mensaje) {
+        if (!campo) return;
+        campo.classList.add('tiene-error');
+        const errorBox = campo.querySelector('.field-error');
+        if (errorBox) {
+          errorBox.textContent = mensaje;
+          errorBox.classList.add('activo');
+        }
+      }
+
+      function limpiarError(campo) {
+        if (!campo) return;
+        campo.classList.remove('tiene-error');
+        const errorBox = campo.querySelector('.field-error');
+        if (errorBox) {
+          errorBox.textContent = '';
+          errorBox.classList.remove('activo');
+        }
+      }
+
+      function limpiarErroresFormulario() {
+        document.querySelectorAll('.campo').forEach((campo) => limpiarError(campo));
+        ocultarMensajeGlobal();
+      }
+
+      function mostrarMensajeGlobal(texto, tipo) {
+        mensajeGlobal.textContent = texto;
+        mensajeGlobal.className = 'mensaje-global ' + tipo;
+      }
+
+      function ocultarMensajeGlobal() {
+        mensajeGlobal.textContent = '';
+        mensajeGlobal.className = 'mensaje-global';
+      }
+
+      function obtenerCamposVisibles() {
+        const visibles = [campoTipoInstitucion, document.getElementById('campoTipoDocumento'), document.getElementById('campoNumeroDocumento'), document.getElementById('campoNombreCompleto'), document.getElementById('campoCelular'), document.getElementById('campoConfirmarCelular'), document.getElementById('campoCorreo'), document.getElementById('campoConfirmarCorreo')];
+        if (!campoEntidadSeleccion.classList.contains('seccion-oculta')) visibles.splice(1, 0, campoEntidadSeleccion);
+        if (!campoRucInstitucion.classList.contains('seccion-oculta')) visibles.splice(2, 0, campoRucInstitucion);
+        if (!campoPaisMision.classList.contains('seccion-oculta')) visibles.splice(3, 0, campoPaisMision);
+        return visibles;
+      }
+
+      function validarFormulario(modo = 'submit') {
+        if (modo === 'submit') limpiarErroresFormulario();
+
+        const errores = [];
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const entidad = getEntidadSeleccionada();
+        const pais = getPaisSeleccionado();
+        const ruc = soloDigitos(rucInstitucion.value);
+        const doc = soloDigitos(numeroDocumento.value);
+        const nombre = valorLimpio(nombreCompleto.value);
+        const cel = soloDigitos(celular.value);
+        const cel2 = soloDigitos(confirmarCelular.value);
+        const correo = normalizarCorreo(correoElectronico.value);
+        const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
+
+        if (!tipo) {
+          errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
+        }
+
+        if (!campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidad) {
+          errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
+        }
+
+        if (!campoRucInstitucion.classList.contains('seccion-oculta')) {
+          if (!ruc) {
+            errores.push({ campo: campoRucInstitucion, mensaje: 'Ingrese el RUC de la institución o entidad.' });
+          } else if (!/^\d{11}$/.test(ruc)) {
+            errores.push({ campo: campoRucInstitucion, mensaje: 'El RUC debe tener exactamente 11 dígitos.' });
+          }
+        }
+
+        if (!campoPaisMision.classList.contains('seccion-oculta') && !pais) {
+          errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
+        }
+
+        if (!tipoDocumento.value) {
+          errores.push({ campo: document.getElementById('campoTipoDocumento'), mensaje: 'Seleccione el tipo de documento de identidad.' });
+        }
+
+        if (!doc) {
+          errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
+        } else if (!/^\d{6,15}$/.test(doc)) {
+          errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese solo números y una longitud entre 6 y 15 dígitos.' });
+        }
+
+        if (!nombre) {
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona responsable del registro.' });
+        } else if (nombre.length < 5) {
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese el nombre completo de la persona responsable del registro.' });
+        }
+
+        if (!cel) {
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
+        } else if (!/^\d{7,15}$/.test(cel)) {
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido usando solo dígitos.' });
+        }
+
+        if (!cel2) {
+          errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el número de celular.' });
+        } else if (cel !== cel2) {
+          errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
+        }
+
+        if (!correo) {
+          errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese el correo electrónico.' });
+        } else if (!esCorreoValido(correo)) {
+          errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese un correo electrónico válido.' });
+        }
+
+        if (!correo2) {
+          errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'Confirme el correo electrónico.' });
+        } else if (correo !== correo2) {
+          errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'El correo electrónico no coincide con la confirmación.' });
+        }
+
+        if (modo === 'submit' && errores.length) {
+          errores.forEach((error) => mostrarError(error.campo, error.mensaje));
+          mostrarMensajeGlobal('Revise los campos resaltados antes de enviar el registro.', 'error');
+          errores[0].campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        return { valido: errores.length === 0, errores };
+      }
+
+      function actualizarBarraProgreso() {
+        const visibles = obtenerCamposVisibles();
+        const total = visibles.length;
+        const completados = visibles.reduce((acc, campo) => {
+          const esValido = validarCampoParaProgreso(campo);
+          return acc + (esValido ? 1 : 0);
+        }, 0);
+
+        const porcentaje = total ? Math.round((completados / total) * 100) : 0;
+        progressText.textContent = porcentaje + '%';
+        progressBarFill.style.width = porcentaje + '%';
+        progressBar.setAttribute('aria-valuenow', String(porcentaje));
+      }
+
+      function validarCampoParaProgreso(campo) {
+        const id = campo.id;
+        switch (id) {
+          case 'campoTipoInstitucion':
+            return Boolean(obtenerTipoInstitucionSeleccionado());
+          case 'campoEntidadSeleccion':
+            return Boolean(entidadSeleccion.value);
+          case 'campoRucInstitucion':
+            return /^\d{11}$/.test(soloDigitos(rucInstitucion.value));
+          case 'campoPaisMision':
+            return Boolean(paisMision.value);
+          case 'campoTipoDocumento':
+            return Boolean(tipoDocumento.value);
+          case 'campoNumeroDocumento':
+            return /^\d{6,15}$/.test(soloDigitos(numeroDocumento.value));
+          case 'campoNombreCompleto':
+            return valorLimpio(nombreCompleto.value).length >= 5;
+          case 'campoCelular':
+            return /^\d{7,15}$/.test(soloDigitos(celular.value));
+          case 'campoConfirmarCelular':
+            return /^\d{7,15}$/.test(soloDigitos(confirmarCelular.value)) && soloDigitos(confirmarCelular.value) === soloDigitos(celular.value);
+          case 'campoCorreo':
+            return esCorreoValido(normalizarCorreo(correoElectronico.value));
+          case 'campoConfirmarCorreo':
+            return esCorreoValido(normalizarCorreo(confirmarCorreoElectronico.value)) && normalizarCorreo(confirmarCorreoElectronico.value) === normalizarCorreo(correoElectronico.value);
+          default:
+            return false;
+        }
+      }
+
+      function construirPayload() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const entidad = getEntidadSeleccionada();
+        const pais = getPaisSeleccionado();
+
+        return {
+          tipoInstitucion: tipo,
+          tipoInstitucionLabel: obtenerLabelTipo(tipo),
+          entidadId: entidad ? entidad.id : '',
+          entidadNombre: entidad ? entidad.nombre : '',
+          paisCodigo: pais ? pais.codigo : '',
+          paisNombre: pais ? pais.nombre : '',
+          ruc: soloDigitos(rucInstitucion.value),
+          tipoDocumento: tipoDocumento.value,
+          tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex] ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent : '',
+          numeroDocumento: soloDigitos(numeroDocumento.value),
+          nombreCompleto: valorLimpio(nombreCompleto.value),
+          celular: soloDigitos(celular.value),
+          correoElectronico: normalizarCorreo(correoElectronico.value)
+        };
+      }
+
+      function obtenerLabelTipo(tipo) {
+        const mapa = {
+          institucion_publica: 'Instituciones y entidades públicas',
+          organizacion_politica: 'Organización política',
+          mision_observacion: 'Misión de observación',
+          encuestadora_vigente: 'Encuestadoras vigentes'
+        };
+        return mapa[tipo] || '';
+      }
+
+      async function enviarFormulario(event) {
+        event.preventDefault();
+        const validacion = validarFormulario('submit');
+        actualizarBarraProgreso();
+
+        if (!validacion.valido) return;
+        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec') {
+          mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
+          return;
+        }
+
+        btnEnviar.disabled = true;
+        mostrarMensajeGlobal('Validando la institución o entidad registrada...', 'ok');
+
+        const payload = construirPayload();
+
+        try {
+          const verificacion = await postToAppsScript('checkInstitution', {
+            tipoInstitucion: payload.tipoInstitucion,
+            entidadId: payload.entidadId,
+            paisCodigo: payload.paisCodigo
+          });
+
+          if (verificacion.status === 'duplicate') {
+            mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
+            mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
+            campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            btnEnviar.disabled = false;
+            return;
+          }
+
+          mostrarMensajeGlobal('Enviando registro...', 'ok');
+          const respuesta = await postToAppsScript('submitRegistration', payload);
+
+          if (respuesta.status === 'success') {
+            mostrarPantallaFinal();
+            return;
+          }
+
+          if (respuesta.status === 'duplicate') {
+            mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
+            mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
+            campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            mostrarMensajeGlobal(respuesta.message || 'Ocurrió un error al enviar el registro. Intente nuevamente.', 'error');
+          }
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeGlobal('No se pudo completar el envío. Revise la publicación de la Web App e intente nuevamente.', 'error');
+        } finally {
+          btnEnviar.disabled = false;
+        }
+      }
+
+      function mostrarPantallaFinal() {
         document.body.innerHTML = `
-          <div style="max-width:800px;margin:40px auto;font-family:Arial,sans-serif;text-align:center;">
-            <h1 style="color:#003366;">Registro ya realizado</h1>
-            <p>Ya se ha registrado una respuesta desde este navegador. Muchas gracias por su participación.</p>
+          <div class="pantalla-final">
+            <h1 style="color:#003366;">Registro completado</h1>
+            <p>Se ha realizado el registro correctamente. Muchas gracias por su participación.</p>
           </div>
         `;
-        return; // No cargamos el formulario ni eventos
       }
-    } catch (e) {
-      console.warn('No se pudo acceder a localStorage:', e);
-      // Si falla localStorage, seguimos normal (sin bloqueo)
-    }
 
-    // Si NO ha respondido, cargamos formulario normalmente
-    cargarRegiones();
-    configurarEventosLogica();
-  };
+      function postToAppsScript(action, payload) {
+        return new Promise((resolve, reject) => {
+          const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+          const timeoutId = window.setTimeout(() => {
+            state.pendingRequests.delete(requestId);
+            reject(new Error('Tiempo de espera agotado.'));
+          }, 25000);
 
-  function cargarRegiones() {
-    const regionSelect = document.getElementById('region');
-    regionSelect.innerHTML = '<option value="">-- Seleccione región --</option>';
-
-    REGIONES.forEach((region) => {
-      const opt = document.createElement('option');
-      opt.value = region;
-      opt.textContent = region;
-      regionSelect.appendChild(opt);
-    });
-  }
-
-function cargarProvincias(region) {
-  const provinciaSelect = document.getElementById('provincia');
-  const distritoSelect = document.getElementById('distrito');
-
-  provinciaSelect.innerHTML = '<option value="">-- Seleccione provincia --</option>';
-  distritoSelect.innerHTML = '<option value="">-- Seleccione distrito --</option>';
-
-  provinciaSelect.disabled = !region;
-  distritoSelect.disabled = true;
-  distritosActuales = {};
-
-  if (!region) return;
-
-  // 🛫 Caso especial: EXTRANJERO
-  if (region === 'EXTRANJERO') {
-    provinciaSelect.innerHTML = '<option value="-">-- No aplica (extranjero) --</option>';
-    distritoSelect.innerHTML = '<option value="-">-- No aplica (extranjero) --</option>';
-    provinciaSelect.disabled = true;
-    distritoSelect.disabled = true;
-    distritosActuales = {};
-    return; // 👈 no intentamos cargar JSON de ubigeo
-  }
-
-  if (ubigeoRegionCache[region]) {
-    popularProvincias(region);
-    return;
-  }
-
-  const url = 'ubigeo/' + encodeURIComponent(region) + '.json';
-
-  fetch(url)
-    .then((r) => {
-      if (!r.ok) throw new Error('No se pudo cargar ' + url);
-      return r.json();
-    })
-    .then((data) => {
-      ubigeoRegionCache[region] = data;
-      popularProvincias(region);
-    })
-    .catch((err) => {
-      console.error('Error cargando JSON de región:', region, err);
-      alert('Ocurrió un problema al cargar los datos de ubicación. Intente nuevamente.');
-    });
-}
-
-  function popularProvincias(region) {
-    const provinciaSelect = document.getElementById('provincia');
-    const dataRegion = ubigeoRegionCache[region] || {};
-
-    provinciaSelect.innerHTML = '<option value="">-- Seleccione provincia --</option>';
-
-    const provincias = Object.keys(dataRegion).sort((a, b) => a.localeCompare(b, 'es'));
-
-    provincias.forEach((prov) => {
-      const opt = document.createElement('option');
-      opt.value = prov;
-      opt.textContent = prov;
-      provinciaSelect.appendChild(opt);
-    });
-  }
-
-  function cargarDistritos(region, provincia) {
-    const distritoSelect = document.getElementById('distrito');
-    distritoSelect.innerHTML = '<option value="">-- Seleccione distrito --</option>';
-
-    distritoSelect.disabled = !(region && provincia);
-    distritosActuales = {};
-
-    if (!region || !provincia) return;
-
-    const dataRegion = ubigeoRegionCache[region] || {};
-    const dataProvincia = dataRegion[provincia] || {};
-
-    distritosActuales = dataProvincia;
-
-    const distritos = Object.keys(dataProvincia).sort((a, b) =>
-      a.localeCompare(b, 'es')
-    );
-
-    distritos.forEach((dist) => {
-      const opt = document.createElement('option');
-      opt.value = dist;
-      opt.textContent = dist;
-      distritoSelect.appendChild(opt);
-    });
-  }
-
-function configurarEventosLogica() {
-
-  // ==========================
-  // REGIÓN → controla provincias + ETLV
-  // ==========================
-  document.getElementById('region').addEventListener('change', function () {
-    const region = this.value;
-    cargarProvincias(region);
-
-    const bloqueETLV = document.getElementById('bloqueETLV');
-    const seccionETLV = document.getElementById('seccionETLV');
-    const seccionAccesoETLV = document.getElementById('seccionAccesoETLV');
-
-    if (region && region !== 'EXTRANJERO') {
-      bloqueETLV.style.display = 'block';
-    } else {
-      bloqueETLV.style.display = 'none';
-      seccionETLV.style.display = 'none';
-      seccionAccesoETLV.style.display = 'none';
-
-      // limpiar todo ETLV
-      document
-        .querySelectorAll(
-          'input[name="sabePuedeElegirLocal"]:checked, ' +
-          'input[name="supoETLV"]:checked, ' +
-          'input[name="haAccedidoETLV"]:checked, ' +
-          'input[name="haCambiadoLocal"]:checked, ' +
-          'input[name="problemasETLV"]:checked'
-        )
-        .forEach((el) => (el.checked = false));
-    }
-  });
-
-  // ==========================
-  // PROVINCIA → distritos
-  // ==========================
-  document.getElementById('provincia').addEventListener('change', function () {
-    const region = document.getElementById('region').value;
-    const provincia = this.value;
-    cargarDistritos(region, provincia);
-  });
-
-  // ==========================
-  // P5 → P6 + P7
-  // ==========================
-  const radiosPublicidad = document.getElementsByName('publicidadONPE');
-  Array.from(radiosPublicidad).forEach((r) => {
-    r.addEventListener('change', function () {
-      const seccion6 = document.getElementById('seccionMediosPublicidad');
-      const bloque7 = document.getElementById('bloqueP7');
-
-      if (this.value === 'Sí') {
-        seccion6.style.display = 'block';
-        bloque7.style.display = 'block';
-      } else {
-        seccion6.style.display = 'none';
-        bloque7.style.display = 'none';
-
-        document
-          .querySelectorAll('input[name="mediosPublicidadONPE"]:checked')
-          .forEach((ch) => (ch.checked = false));
-
-        document
-          .querySelectorAll('input[name="claridadONPE"]:checked')
-          .forEach((r) => (r.checked = false));
+          state.pendingRequests.set(requestId, { resolve, reject, timeoutId });
+          enviarPostOculto({ action, requestId, ...payload });
+        });
       }
-    });
-  });
 
-  // ==========================
-  // P9 → P10
-  // ==========================
-  const radiosSupoETLV = document.getElementsByName('supoETLV');
-  Array.from(radiosSupoETLV).forEach((r) => {
-    r.addEventListener('change', function () {
-      const seccion = document.getElementById('seccionETLV');
-      const seccionAcceso = document.getElementById('seccionAccesoETLV');
+      function enviarPostOculto(data) {
+        const tempForm = document.createElement('form');
+        tempForm.method = 'POST';
+        tempForm.action = API_URL;
+        tempForm.target = 'submitFrame';
+        tempForm.style.display = 'none';
 
-      if (this.value === 'Sí') {
-        seccion.style.display = 'block';
-      } else {
-        seccion.style.display = 'none';
-        seccionAcceso.style.display = 'none';
+        Object.entries(data).forEach(([key, value]) => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = value == null ? '' : String(value);
+          tempForm.appendChild(input);
+        });
 
-        document
-          .querySelectorAll(
-            'input[name="haAccedidoETLV"]:checked, ' +
-            'input[name="haCambiadoLocal"]:checked, ' +
-            'input[name="problemasETLV"]:checked'
-          )
-          .forEach((el) => (el.checked = false));
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        window.setTimeout(() => tempForm.remove(), 500);
       }
-    });
-  });
 
-  // ==========================
-  // P10 → P11 + P12
-  // ==========================
-  const radiosHaAccedido = document.getElementsByName('haAccedidoETLV');
-  Array.from(radiosHaAccedido).forEach((r) => {
-    r.addEventListener('change', function () {
-      const seccionAcceso = document.getElementById('seccionAccesoETLV');
+      function manejarRespuestaIframe(event) {
+        const data = event.data;
+        if (!data || data.source !== 'onpe-registro-webapp' || !data.requestId) return;
 
-      if (this.value === 'Sí') {
-        seccionAcceso.style.display = 'block';
-      } else {
-        seccionAcceso.style.display = 'none';
+        const pending = state.pendingRequests.get(data.requestId);
+        if (!pending) return;
 
-        document
-          .querySelectorAll(
-            'input[name="haCambiadoLocal"]:checked, ' +
-            'input[name="problemasETLV"]:checked'
-          )
-          .forEach((el) => (el.checked = false));
+        clearTimeout(pending.timeoutId);
+        state.pendingRequests.delete(data.requestId);
+        pending.resolve(data);
       }
-    });
-  });
-
-  // ==========================
-  // ENVIAR
-  // ==========================
-  document.getElementById('btnEnviar').addEventListener('click', enviarFormulario);
-}
-
-
-  function obtenerValorRadio(nombre) {
-    const seleccionado = document.querySelector(`input[name="${nombre}"]:checked`);
-    return seleccionado ? seleccionado.value : '';
-  }
-
-function genId() {
-  return (window.crypto && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : (Date.now() + '-' + Math.random().toString(16).slice(2));
-}
-
-function sendOnce(payload) {
-  const body = JSON.stringify(payload);
-
-  // 1) Intento con sendBeacon (más fiable si se cierra la página)
-  if (navigator.sendBeacon) {
-    try {
-      const ok = navigator.sendBeacon(
-        API_URL,
-        new Blob([body], { type: 'text/plain;charset=utf-8' })
-      );
-      if (ok) return;
-    } catch (_) {}
-  }
-
-  // 2) Fallback con fetch (fire & forget)
-  try {
-    fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body,
-      keepalive: true
-    });
-  } catch (_) {}
-}
-
-function sendWithInvisibleRetries(payload) {
-  const j1 = Math.floor(Math.random() * 600);
-  const j2 = Math.floor(Math.random() * 1200);
-
-  sendOnce(payload);
-  setTimeout(() => sendOnce(payload), 2000 + j1);
-  setTimeout(() => sendOnce(payload), 8000 + j2);
-
-  window.addEventListener('pagehide', () => sendOnce(payload), { once: true });
-}
-
-function enviarFormulario() {
-  const grupoEtario = obtenerValorRadio('grupoEtario');
-  const region = document.getElementById('region').value;
-  let provincia = document.getElementById('provincia').value;
-  let distrito  = document.getElementById('distrito').value;
-  
-  let ubigeo = '-';
-  
-  if (region === 'EXTRANJERO') {
-    // 🌎 Extranjero: forzamos valores neutros
-    provincia = '-';
-    distrito  = '-';
-    ubigeo    = '-';
-  } else {
-    if (distrito && distritosActuales[distrito]) {
-      ubigeo = distritosActuales[distrito];
-    }
-  }
-
-  const publicidadONPE = obtenerValorRadio('publicidadONPE');
-  const mediosPublicidadONPE = Array.from(
-    document.querySelectorAll('input[name="mediosPublicidadONPE"]:checked')
-  ).map((ch) => ch.value);
-
-  const claridadONPE = obtenerValorRadio('claridadONPE');
-  const sabePuedeElegirLocal = obtenerValorRadio('sabePuedeElegirLocal');
-  const supoETLV = obtenerValorRadio('supoETLV');
-  const haAccedidoETLV = obtenerValorRadio('haAccedidoETLV');
-  const haCambiadoLocal = obtenerValorRadio('haCambiadoLocal');
-  const problemasETLV = Array.from(
-    document.querySelectorAll('input[name="problemasETLV"]:checked')
-  ).map((ch) => ch.value);
-
-  // ==========================
-  // VALIDACIONES
-  // ==========================
-
-  if (!grupoEtario) {
-    alert('Por favor, indique su grupo etario.');
-    return;
-  }
-
-  if (!region) {
-    alert('Por favor, complete región de residencia.');
-    return;
-  }
-
-  // Solo exigimos provincia/distrito/ubigeo si NO es extranjero
-  if (region !== 'EXTRANJERO' && (!provincia || !distrito || ubigeo === '-')) {
-    alert('Por favor, complete provincia y distrito válidos.');
-    return;
-  }
-
-  if (!publicidadONPE) {
-    alert('Por favor, responda la pregunta 5.');
-    return;
-  }
-
-  if (publicidadONPE === 'Sí' && mediosPublicidadONPE.length === 0) {
-    alert('Por favor, responda la pregunta 6.');
-    return;
-  }
-
-  if (publicidadONPE === 'Sí' && !claridadONPE) {
-    alert('Por favor, responda la pregunta 7.');
-    return;
-  }
-
-  // 👇 Solo validamos P8–P12 si NO es extranjero
-  if (region !== 'EXTRANJERO') {
-    if (!sabePuedeElegirLocal) {
-      alert('Por favor, responda la pregunta 8.');
-      return;
-    }
-
-    if (!supoETLV) {
-      alert('Por favor, responda la pregunta 9.');
-      return;
-    }
-
-    if (supoETLV === 'Sí' && !haAccedidoETLV) {
-      alert('Por favor, responda la pregunta 10.');
-      return;
-    }
-
-    if (supoETLV === 'Sí' && haAccedidoETLV === 'Sí' && !haCambiadoLocal) {
-      alert('Por favor, responda la pregunta 11.');
-      return;
-    }
-
-    if (supoETLV === 'Sí' && haAccedidoETLV === 'Sí' && problemasETLV.length === 0) {
-      alert('Por favor, responda la pregunta 12.');
-      return;
-    }
-  }
-
-  const formData = {
-    submissionId: genId(),
-    sentAt: new Date().toISOString(),
-    grupoEtario,
-    region,
-    provincia,
-    distrito,
-    ubigeo,
-    publicidadONPE,
-    mediosPublicidadONPE,
-    claridadONPE,
-    sabePuedeElegirLocal,
-    supoETLV,
-    haAccedidoETLV,
-    haCambiadoLocal,
-    problemasETLV
-  };
-
-  const btn = document.getElementById('btnEnviar');
-  if (btn) btn.disabled = true;
-
-  sendWithInvisibleRetries(formData);
-
-  try { localStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
-
-  document.body.innerHTML = `
-    <div style="max-width:800px;margin:40px auto;font-family:Arial,sans-serif;text-align:center;">
-      <h1 style="color:#003366;">Registro completado</h1>
-      <p>Se ha realizado el registro correctamente. Muchas gracias por su participación.</p>
-    </div>
-  `;
-}
-</script>
-</body>
+    </script>
+  </body>
 </html>
