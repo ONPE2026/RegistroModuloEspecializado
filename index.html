@@ -515,7 +515,7 @@
 
         lista.forEach((item) => {
           const option = document.createElement('option');
-          option.value = item.id;
+          option.value = item.nombre;
           option.textContent = item.nombre;
           entidadSeleccion.appendChild(option);
         });
@@ -526,7 +526,7 @@
         paisMision.innerHTML = '<option value="">-- Seleccione un país --</option>';
         lista.forEach((item) => {
           const option = document.createElement('option');
-          option.value = item.codigo;
+          option.value = item.nombre;
           option.textContent = item.nombre;
           paisMision.appendChild(option);
         });
@@ -540,15 +540,15 @@
       function getEntidadSeleccionada() {
         const tipo = obtenerTipoInstitucionSeleccionado();
         const lista = state.catalogos[tipo] || [];
-        const id = entidadSeleccion.value;
-        const encontrado = lista.find((item) => item.id === id);
+        const nombre = entidadSeleccion.value;
+        const encontrado = lista.find((item) => item.nombre === nombre);
         return encontrado || null;
       }
 
       function getPaisSeleccionado() {
-        const codigo = paisMision.value;
+        const nombre = paisMision.value;
         const lista = state.catalogos.paises || [];
-        return lista.find((item) => item.codigo === codigo) || null;
+        return lista.find((item) => item.nombre === nombre) || null;
       }
 
       function soloDigitos(valor) {
@@ -656,13 +656,13 @@
         }
 
         if (!nombre) {
-          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos completos.' });
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona responsable del registro.' });
         } else if (nombre.length < 5) {
-          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos completos.' });
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese el nombre completo de la persona responsable del registro.' });
         }
 
         if (!cel) {
-          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular.' });
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
         } else if (!/^\d{9}$/.test(cel)) {
           errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido de 9 dígitos.' });
         }
@@ -704,9 +704,7 @@
         return {
           tipoInstitucion: tipo,
           tipoInstitucionLabel: obtenerLabelTipo(tipo),
-          entidadId: entidad ? entidad.id : '',
           entidadNombre: entidad ? entidad.nombre : '',
-          paisCodigo: pais ? pais.codigo : '',
           paisNombre: pais ? pais.nombre : '',
           ruc: soloDigitos(rucInstitucion.value),
           tipoDocumento: tipoDocumento.value,
@@ -733,7 +731,8 @@
         const validacion = validarFormulario('submit');
 
         if (!validacion.valido) return;
-        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec') {
+        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec
+') {
           mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
           return;
         }
@@ -746,8 +745,8 @@
         try {
           const verificacion = await postToAppsScript('checkInstitution', {
             tipoInstitucion: payload.tipoInstitucion,
-            entidadId: payload.entidadId,
-            paisCodigo: payload.paisCodigo
+            entidadNombre: payload.entidadNombre,
+            paisNombre: payload.paisNombre
           });
 
           if (verificacion.status === 'duplicate') {
