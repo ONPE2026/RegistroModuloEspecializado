@@ -308,7 +308,7 @@
     <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
     <script>
-      const API_URL = 'https://script.google.com/macros/s/AKfycbwgY7rMjWOszO-dsJoXv5wJwqZkgKIQHyL49pevd9vDVBFP8rF8SSnSPXnAH98fTgF7/exec';
+      const API_URL = 'PEGAR_AQUI_URL_WEB_APP';
       const LISTAS_BASE_PATH = './';
 
       const JSON_FILES = {
@@ -711,7 +711,7 @@
         const validacion = validarFormulario();
 
         if (!validacion.valido) return;
-        if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
+        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbwgY7rMjWOszO-dsJoXv5wJwqZkgKIQHyL49pevd9vDVBFP8rF8SSnSPXnAH98fTgF7/exec') {
           mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
           return;
         }
