@@ -33,6 +33,10 @@
         font-size: 1.8rem;
       }
 
+      h2 {
+        margin-bottom: 5px;
+      }
+
       p { margin-top: 0.75rem; }
 
       fieldset {
@@ -51,6 +55,12 @@
       label {
         display: block;
         margin-top: 8px;
+      }
+
+      .inline-label {
+        display: inline-block;
+        margin-right: 15px;
+        margin-top: 10px;
       }
 
       select,
@@ -93,6 +103,12 @@
         cursor: not-allowed;
       }
 
+      .mensaje {
+        margin-top: 15px;
+        font-weight: bold;
+        color: var(--onpe-azul);
+      }
+
       .banner {
         max-width: 100%;
         height: auto;
@@ -132,6 +148,44 @@
 
       .field-error.activo {
         display: block;
+      }
+
+      .nota {
+        margin-top: 4px;
+        color: #4b5563;
+        font-size: 0.9rem;
+      }
+
+      .progress-wrap {
+        margin-top: 18px;
+        background: #ffffff;
+        border: 1px solid var(--onpe-azul-claro);
+        border-radius: 5px;
+        padding: 12px 15px;
+      }
+
+      .progress-label-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+        color: var(--onpe-azul);
+        font-weight: bold;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #dde6f4;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        width: 0%;
+        height: 100%;
+        background: var(--onpe-azul);
+        transition: width 0.25s ease;
       }
 
       .mensaje-global {
@@ -177,6 +231,7 @@
         position: absolute;
       }
 
+      /* 📱 Ajustes para celular */
       @media (max-width: 600px) {
         body {
           padding: 10px;
@@ -198,6 +253,16 @@
           width: 100%;
           min-width: 0;
         }
+
+        .inline-label {
+          display: block;
+          margin-right: 0;
+          margin-top: 8px;
+        }
+
+        .progress-label-row {
+          font-size: 0.95rem;
+        }
       }
     </style>
   </head>
@@ -213,12 +278,22 @@
 
     <p>Complete la siguiente información. Todas las preguntas son obligatorias.</p>
 
+    <div class="progress-wrap" aria-live="polite">
+      <div class="progress-label-row">
+        <span>Avance del registro</span>
+        <span id="progressText">0%</span>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+      </div>
+    </div>
+
     <form id="formRegistro" novalidate>
       <fieldset>
         <legend>Datos de la institución o entidad</legend>
 
         <div class="campo" id="campoTipoInstitucion">
-          <label>Seleccione el tipo de institución o entidad que realiza el registro</label>
+          <label>1. Seleccione el tipo de institución o entidad que realiza el registro</label>
           <div class="grupo-radios opciones-verticales">
             <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Instituciones y entidades públicas</label>
             <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
@@ -229,7 +304,7 @@
         </div>
 
         <div class="campo seccion-oculta" id="campoEntidadSeleccion">
-          <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción</label>
+          <label id="labelEntidadSeleccion" for="entidadSeleccion">2. Seleccione una opción</label>
           <select id="entidadSeleccion">
             <option value="">-- Seleccione una opción --</option>
           </select>
@@ -237,13 +312,14 @@
         </div>
 
         <div class="campo seccion-oculta" id="campoRucInstitucion">
-          <label for="rucInstitucion">Ingrese el RUC de la institución o entidad</label>
+          <label for="rucInstitucion">3. Ingrese el RUC de la institución o entidad</label>
           <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
+          <div class="nota">Debe registrar los 11 dígitos del RUC.</div>
           <div class="field-error"></div>
         </div>
 
         <div class="campo seccion-oculta" id="campoPaisMision">
-          <label for="paisMision">Seleccione el país de la misión de observación</label>
+          <label for="paisMision">4. Seleccione el país de la misión de observación</label>
           <select id="paisMision">
             <option value="">-- Seleccione un país --</option>
           </select>
@@ -255,7 +331,7 @@
         <legend>Datos de la persona responsable del registro</legend>
 
         <div class="campo" id="campoTipoDocumento">
-          <label for="tipoDocumento">Seleccione el tipo de documento de identidad</label>
+          <label for="tipoDocumento">5. Seleccione el tipo de documento de identidad</label>
           <select id="tipoDocumento">
             <option value="">-- Seleccione el tipo de documento --</option>
             <option value="dni_cedula">DNI / Cédula de identidad</option>
@@ -265,38 +341,42 @@
         </div>
 
         <div class="campo" id="campoNumeroDocumento">
-          <label for="numeroDocumento">Ingrese el número de documento de identidad</label>
+          <label for="numeroDocumento">6. Ingrese el número de documento de identidad</label>
           <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoNombreCompleto">
-          <label for="nombreCompleto">Ingrese sus nombres y apellidos</label>
+          <label for="nombreCompleto">7. Ingrese los nombres y apellidos de la persona responsable del registro</label>
           <input id="nombreCompleto" type="text" maxlength="150" autocomplete="name" />
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoCelular">
-          <label for="celular">Ingrese el número de celular</label>
-          <input id="celular" type="text" inputmode="numeric" maxlength="9" autocomplete="off" />
+          <label for="celular">8. Ingrese el número de celular</label>
+          <input id="celular" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoConfirmarCelular">
-          <label for="confirmarCelular">Confirme el número de celular</label>
-          <input id="confirmarCelular" type="text" inputmode="numeric" maxlength="9" autocomplete="off" />
+          <label for="confirmarCelular">9. Confirme el número de celular</label>
+          <input id="confirmarCelular" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoCorreo">
-          <label for="correoElectronico">Ingrese el correo electrónico</label>
+          <label for="correoElectronico">10. Ingrese el correo electrónico</label>
           <input id="correoElectronico" type="email" maxlength="150" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoConfirmarCorreo">
-          <label for="confirmarCorreoElectronico">Confirme el correo electrónico</label>
+          <label for="confirmarCorreoElectronico">11. Confirme el correo electrónico</label>
           <input id="confirmarCorreoElectronico" type="email" maxlength="150" autocomplete="off" />
+          <div class="nota">No se permite pegar información en este campo.</div>
           <div class="field-error"></div>
         </div>
       </fieldset>
@@ -308,7 +388,10 @@
     <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
     <script>
-      const API_URL = 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec';
+      // Reemplaza esta URL por la de tu Web App de Apps Script (/exec)
+      const API_URL = 'PEGAR_AQUI_URL_WEB_APP';
+
+      // Si alojas el HTML y los JSON en la misma carpeta, no cambies esta ruta.
       const LISTAS_BASE_PATH = './';
 
       const JSON_FILES = {
@@ -320,10 +403,10 @@
       };
 
       const LABELS_ENTIDAD = {
-        institucion_publica: 'Seleccione el nombre de la institución o entidad pública',
-        organizacion_politica: 'Seleccione la organización política',
-        mision_observacion: 'Seleccione la misión de observación',
-        encuestadora_vigente: 'Seleccione la encuestadora vigente'
+        institucion_publica: '2. Seleccione el nombre de la institución o entidad pública',
+        organizacion_politica: '2. Seleccione la organización política',
+        mision_observacion: '2. Seleccione la misión de observación',
+        encuestadora_vigente: '2. Seleccione la encuestadora vigente'
       };
 
       const PLACEHOLDERS_ENTIDAD = {
@@ -341,6 +424,9 @@
       const form = document.getElementById('formRegistro');
       const btnEnviar = document.getElementById('btnEnviar');
       const mensajeGlobal = document.getElementById('mensajeGlobal');
+      const progressText = document.getElementById('progressText');
+      const progressBarFill = document.getElementById('progressBarFill');
+      const progressBar = document.querySelector('.progress-bar');
 
       const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
       const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
@@ -367,6 +453,7 @@
           await cargarCatalogos();
           configurarEventos();
           actualizarCamposCondicionales();
+          actualizarBarraProgreso();
         } catch (error) {
           console.error(error);
           mostrarMensajeGlobal('Ocurrió un problema al cargar las listas del formulario. Revise las rutas de los archivos JSON e intente nuevamente.', 'error');
@@ -398,39 +485,47 @@
           radio.addEventListener('change', () => {
             limpiarError(campoTipoInstitucion);
             actualizarCamposCondicionales();
+            actualizarBarraProgreso();
           });
         });
 
         entidadSeleccion.addEventListener('change', () => {
           limpiarError(campoEntidadSeleccion);
+          actualizarBarraProgreso();
         });
 
         rucInstitucion.addEventListener('input', () => {
           rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
           limpiarError(campoRucInstitucion);
+          actualizarBarraProgreso();
         });
 
         paisMision.addEventListener('change', () => {
           limpiarError(campoPaisMision);
+          actualizarBarraProgreso();
         });
 
         tipoDocumento.addEventListener('change', () => {
           limpiarError(document.getElementById('campoTipoDocumento'));
+          actualizarBarraProgreso();
         });
 
         numeroDocumento.addEventListener('input', () => {
           numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
           limpiarError(document.getElementById('campoNumeroDocumento'));
+          actualizarBarraProgreso();
         });
 
         nombreCompleto.addEventListener('input', () => {
           limpiarError(document.getElementById('campoNombreCompleto'));
+          actualizarBarraProgreso();
         });
 
         [celular, confirmarCelular].forEach((input) => {
           input.addEventListener('input', () => {
-            input.value = soloDigitos(input.value).slice(0, 9);
+            input.value = soloDigitos(input.value).slice(0, 15);
             limpiarError(input.closest('.campo'));
+            actualizarBarraProgreso();
           });
           bloquearPegado(input);
         });
@@ -438,6 +533,7 @@
         [correoElectronico, confirmarCorreoElectronico].forEach((input) => {
           input.addEventListener('input', () => {
             limpiarError(input.closest('.campo'));
+            actualizarBarraProgreso();
           });
           bloquearPegado(input);
         });
@@ -486,7 +582,7 @@
 
       function poblarEntidad(tipo) {
         const lista = state.catalogos[tipo] || [];
-        labelEntidadSeleccion.textContent = LABELS_ENTIDAD[tipo] || 'Seleccione una opción';
+        labelEntidadSeleccion.textContent = LABELS_ENTIDAD[tipo] || '2. Seleccione una opción';
 
         entidadSeleccion.innerHTML = '';
         const optionDefault = document.createElement('option');
@@ -495,11 +591,9 @@
         entidadSeleccion.appendChild(optionDefault);
 
         lista.forEach((item) => {
-          const nombre = item && item.nombre ? String(item.nombre) : '';
-          if (!nombre) return;
           const option = document.createElement('option');
-          option.value = nombre;
-          option.textContent = nombre;
+          option.value = item.id;
+          option.textContent = item.nombre;
           entidadSeleccion.appendChild(option);
         });
       }
@@ -508,11 +602,9 @@
         const lista = state.catalogos.paises || [];
         paisMision.innerHTML = '<option value="">-- Seleccione un país --</option>';
         lista.forEach((item) => {
-          const nombre = item && item.nombre ? String(item.nombre) : '';
-          if (!nombre) return;
           const option = document.createElement('option');
-          option.value = nombre;
-          option.textContent = nombre;
+          option.value = item.codigo;
+          option.textContent = item.nombre;
           paisMision.appendChild(option);
         });
       }
@@ -520,6 +612,20 @@
       function obtenerTipoInstitucionSeleccionado() {
         const checked = document.querySelector('input[name="tipoInstitucion"]:checked');
         return checked ? checked.value : '';
+      }
+
+      function getEntidadSeleccionada() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const lista = state.catalogos[tipo] || [];
+        const id = entidadSeleccion.value;
+        const encontrado = lista.find((item) => item.id === id);
+        return encontrado || null;
+      }
+
+      function getPaisSeleccionado() {
+        const codigo = paisMision.value;
+        const lista = state.catalogos.paises || [];
+        return lista.find((item) => item.codigo === codigo) || null;
       }
 
       function soloDigitos(valor) {
@@ -573,13 +679,21 @@
         mensajeGlobal.className = 'mensaje-global';
       }
 
-      function validarFormulario() {
-        limpiarErroresFormulario();
+      function obtenerCamposVisibles() {
+        const visibles = [campoTipoInstitucion, document.getElementById('campoTipoDocumento'), document.getElementById('campoNumeroDocumento'), document.getElementById('campoNombreCompleto'), document.getElementById('campoCelular'), document.getElementById('campoConfirmarCelular'), document.getElementById('campoCorreo'), document.getElementById('campoConfirmarCorreo')];
+        if (!campoEntidadSeleccion.classList.contains('seccion-oculta')) visibles.splice(1, 0, campoEntidadSeleccion);
+        if (!campoRucInstitucion.classList.contains('seccion-oculta')) visibles.splice(2, 0, campoRucInstitucion);
+        if (!campoPaisMision.classList.contains('seccion-oculta')) visibles.splice(3, 0, campoPaisMision);
+        return visibles;
+      }
+
+      function validarFormulario(modo = 'submit') {
+        if (modo === 'submit') limpiarErroresFormulario();
 
         const errores = [];
         const tipo = obtenerTipoInstitucionSeleccionado();
-        const entidadNombre = valorLimpio(entidadSeleccion.value);
-        const paisNombre = valorLimpio(paisMision.value);
+        const entidad = getEntidadSeleccionada();
+        const pais = getPaisSeleccionado();
         const ruc = soloDigitos(rucInstitucion.value);
         const doc = soloDigitos(numeroDocumento.value);
         const nombre = valorLimpio(nombreCompleto.value);
@@ -592,7 +706,7 @@
           errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
         }
 
-        if (!campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) {
+        if (!campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidad) {
           errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
         }
 
@@ -604,7 +718,7 @@
           }
         }
 
-        if (!campoPaisMision.classList.contains('seccion-oculta') && !paisNombre) {
+        if (!campoPaisMision.classList.contains('seccion-oculta') && !pais) {
           errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
         }
 
@@ -626,8 +740,8 @@
 
         if (!cel) {
           errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
-        } else if (!/^\d{9}$/.test(cel)) {
-          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido de 9 dígitos.' });
+        } else if (!/^\d{7,15}$/.test(cel)) {
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido usando solo dígitos.' });
         }
 
         if (!cel2) {
@@ -648,7 +762,7 @@
           errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'El correo electrónico no coincide con la confirmación.' });
         }
 
-        if (errores.length) {
+        if (modo === 'submit' && errores.length) {
           errores.forEach((error) => mostrarError(error.campo, error.mensaje));
           mostrarMensajeGlobal('Revise los campos resaltados antes de enviar el registro.', 'error');
           errores[0].campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -657,19 +771,65 @@
         return { valido: errores.length === 0, errores };
       }
 
+      function actualizarBarraProgreso() {
+        const visibles = obtenerCamposVisibles();
+        const total = visibles.length;
+        const completados = visibles.reduce((acc, campo) => {
+          const esValido = validarCampoParaProgreso(campo);
+          return acc + (esValido ? 1 : 0);
+        }, 0);
+
+        const porcentaje = total ? Math.round((completados / total) * 100) : 0;
+        progressText.textContent = porcentaje + '%';
+        progressBarFill.style.width = porcentaje + '%';
+        progressBar.setAttribute('aria-valuenow', String(porcentaje));
+      }
+
+      function validarCampoParaProgreso(campo) {
+        const id = campo.id;
+        switch (id) {
+          case 'campoTipoInstitucion':
+            return Boolean(obtenerTipoInstitucionSeleccionado());
+          case 'campoEntidadSeleccion':
+            return Boolean(entidadSeleccion.value);
+          case 'campoRucInstitucion':
+            return /^\d{11}$/.test(soloDigitos(rucInstitucion.value));
+          case 'campoPaisMision':
+            return Boolean(paisMision.value);
+          case 'campoTipoDocumento':
+            return Boolean(tipoDocumento.value);
+          case 'campoNumeroDocumento':
+            return /^\d{6,15}$/.test(soloDigitos(numeroDocumento.value));
+          case 'campoNombreCompleto':
+            return valorLimpio(nombreCompleto.value).length >= 5;
+          case 'campoCelular':
+            return /^\d{7,15}$/.test(soloDigitos(celular.value));
+          case 'campoConfirmarCelular':
+            return /^\d{7,15}$/.test(soloDigitos(confirmarCelular.value)) && soloDigitos(confirmarCelular.value) === soloDigitos(celular.value);
+          case 'campoCorreo':
+            return esCorreoValido(normalizarCorreo(correoElectronico.value));
+          case 'campoConfirmarCorreo':
+            return esCorreoValido(normalizarCorreo(confirmarCorreoElectronico.value)) && normalizarCorreo(confirmarCorreoElectronico.value) === normalizarCorreo(correoElectronico.value);
+          default:
+            return false;
+        }
+      }
+
       function construirPayload() {
         const tipo = obtenerTipoInstitucionSeleccionado();
+        const entidad = getEntidadSeleccionada();
+        const pais = getPaisSeleccionado();
 
         return {
           tipoInstitucion: tipo,
           tipoInstitucionLabel: obtenerLabelTipo(tipo),
-          entidadNombre: valorLimpio(entidadSeleccion.value),
-          paisNombre: valorLimpio(paisMision.value),
+          entidadId: entidad ? entidad.id : '',
+          entidadNombre: entidad ? entidad.nombre : '',
+          paisCodigo: pais ? pais.codigo : '',
+          paisNombre: pais ? pais.nombre : '',
           ruc: soloDigitos(rucInstitucion.value),
           tipoDocumento: tipoDocumento.value,
-          tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
-            ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent
-            : '',
+          tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex] ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent : '',
           numeroDocumento: soloDigitos(numeroDocumento.value),
           nombreCompleto: valorLimpio(nombreCompleto.value),
           celular: soloDigitos(celular.value),
@@ -689,7 +849,8 @@
 
       async function enviarFormulario(event) {
         event.preventDefault();
-        const validacion = validarFormulario();
+        const validacion = validarFormulario('submit');
+        actualizarBarraProgreso();
 
         if (!validacion.valido) return;
         if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec') {
@@ -705,9 +866,8 @@
         try {
           const verificacion = await postToAppsScript('checkInstitution', {
             tipoInstitucion: payload.tipoInstitucion,
-            tipoInstitucionLabel: payload.tipoInstitucionLabel,
-            entidadNombre: payload.entidadNombre,
-            paisNombre: payload.paisNombre
+            entidadId: payload.entidadId,
+            paisCodigo: payload.paisCodigo
           });
 
           if (verificacion.status === 'duplicate') {
