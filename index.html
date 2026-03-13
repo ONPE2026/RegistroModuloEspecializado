@@ -859,11 +859,11 @@
       const payload = construirPayload();
       mostrarPantallaFinalOptimista();
 
-      enviarPostOculto({
-        action: 'queueRegistration',
-        requestId: `req_${Date.now()}`,
-        ...payload
-      });
+      enviarPostOculto({  
+      action: 'submitRegistration',
+      requestId: `req_${Date.now()}`,
+      ...payload
+    });
     }
 
     function postToAppsScript(action, payload) {
