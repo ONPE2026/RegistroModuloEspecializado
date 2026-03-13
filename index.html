@@ -278,13 +278,13 @@
 
         <div class="campo" id="campoCelular">
           <label for="celular">Ingrese el número de celular</label>
-          <input id="celular" type="text" inputmode="numeric" maxlength="9" autocomplete="off" />
+          <input id="celular" type="text" inputmode="tel" maxlength="16" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoConfirmarCelular">
           <label for="confirmarCelular">Confirme el número de celular</label>
-          <input id="confirmarCelular" type="text" inputmode="numeric" maxlength="9" autocomplete="off" />
+          <input id="confirmarCelular" type="text" inputmode="tel" maxlength="16" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
@@ -308,7 +308,7 @@
     <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
     <script>
-      const API_URL = 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec';
+      const API_URL = 'https://script.google.com/macros/s/AKfycbwgY7rMjWOszO-dsJoXv5wJwqZkgKIQHyL49pevd9vDVBFP8rF8SSnSPXnAH98fTgF7/exec';
       const LISTAS_BASE_PATH = './';
 
       const JSON_FILES = {
@@ -429,7 +429,7 @@
 
         [celular, confirmarCelular].forEach((input) => {
           input.addEventListener('input', () => {
-            input.value = soloDigitos(input.value).slice(0, 9);
+            input.value = sanitizarCelular(input.value);
             limpiarError(input.closest('.campo'));
           });
           bloquearPegado(input);
@@ -526,6 +526,21 @@
         return String(valor || '').replace(/\D+/g, '');
       }
 
+      function sanitizarCelular(valor) {
+        const texto = String(valor || '');
+        const tieneMasInicial = texto.trim().startsWith('+');
+        const digitos = texto.replace(/\D+/g, '').slice(0, 15);
+        return (tieneMasInicial ? '+' : '') + digitos;
+      }
+
+      function normalizarCelularComparacion(valor) {
+        return String(valor || '').replace(/\D+/g, '');
+      }
+
+      function esCelularValido(valor) {
+        return /^\+?\d{9,15}$/.test(String(valor || '').trim());
+      }
+
       function valorLimpio(valor) {
         return String(valor || '').trim();
       }
@@ -583,8 +598,10 @@
         const ruc = soloDigitos(rucInstitucion.value);
         const doc = soloDigitos(numeroDocumento.value);
         const nombre = valorLimpio(nombreCompleto.value);
-        const cel = soloDigitos(celular.value);
-        const cel2 = soloDigitos(confirmarCelular.value);
+        const cel = valorLimpio(celular.value);
+        const cel2 = valorLimpio(confirmarCelular.value);
+        const celNorm = normalizarCelularComparacion(celular.value);
+        const cel2Norm = normalizarCelularComparacion(confirmarCelular.value);
         const correo = normalizarCorreo(correoElectronico.value);
         const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
 
@@ -619,20 +636,22 @@
         }
 
         if (!nombre) {
-          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona responsable del registro.' });
+          errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos.' });
         } else if (nombre.length < 5) {
           errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese el nombre completo de la persona responsable del registro.' });
         }
 
         if (!cel) {
           errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
-        } else if (!/^\d{9}$/.test(cel)) {
-          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido de 9 dígitos.' });
+        } else if (!esCelularValido(cel)) {
+          errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número de celular válido. Puede incluir el código del país con +.' });
         }
 
         if (!cel2) {
           errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el número de celular.' });
-        } else if (cel !== cel2) {
+        } else if (!esCelularValido(cel2)) {
+          errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Ingrese un número de celular válido. Puede incluir el código del país con +.' });
+        } else if (celNorm !== cel2Norm) {
           errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
         }
 
@@ -672,7 +691,7 @@
             : '',
           numeroDocumento: soloDigitos(numeroDocumento.value),
           nombreCompleto: valorLimpio(nombreCompleto.value),
-          celular: soloDigitos(celular.value),
+          celular: valorLimpio(celular.value),
           correoElectronico: normalizarCorreo(correoElectronico.value)
         };
       }
@@ -692,7 +711,7 @@
         const validacion = validarFormulario();
 
         if (!validacion.valido) return;
-        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbyVPgp8Ym92KCTjzdjabHYWbbxhNpw2_eNbdK_WmgAoe53rK2MVDFgo_NjE1GjyfOjP/exec') {
+        if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
           mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
           return;
         }
@@ -745,7 +764,7 @@
         document.body.innerHTML = `
           <div class="pantalla-final">
             <h1 style="color:#003366;">Registro completado</h1>
-            <p>Se ha realizado el registro correctamente. Muchas gracias por su participación.</p>
+            <p>Se ha realizado el registro correctamente.</p>
           </div>
         `;
       }
