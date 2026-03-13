@@ -177,6 +177,15 @@
         position: absolute;
       }
 
+      .resumen-validacion {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        background: #edf9f3;
+        color: var(--onpe-verde);
+        font-weight: bold;
+      }
+
       @media (max-width: 600px) {
         body {
           padding: 10px;
@@ -214,8 +223,8 @@
     <p>Complete la siguiente información. Todas las preguntas son obligatorias.</p>
 
     <form id="formRegistro" novalidate>
-      <fieldset>
-        <legend>Datos de la institución o entidad</legend>
+      <fieldset id="parte1">
+        <legend>Parte 1. Validación de la institución o entidad</legend>
 
         <div class="campo" id="campoTipoInstitucion">
           <label>Seleccione el tipo de institución o entidad que realiza el registro</label>
@@ -249,10 +258,13 @@
           </select>
           <div class="field-error"></div>
         </div>
+
+        <button id="btnValidarParte1" type="button" class="boton">Validar registro</button>
+        <div id="resumenValidacion" class="resumen-validacion seccion-oculta"></div>
       </fieldset>
 
-      <fieldset>
-        <legend>Datos de la persona responsable del registro</legend>
+      <fieldset id="parte2" class="seccion-oculta">
+        <legend>Parte 2. Datos de la persona responsable del registro</legend>
 
         <div class="campo" id="campoTipoDocumento">
           <label for="tipoDocumento">Seleccione el tipo de documento de identidad</label>
@@ -299,16 +311,17 @@
           <input id="confirmarCorreoElectronico" type="email" maxlength="150" autocomplete="off" />
           <div class="field-error"></div>
         </div>
+
+        <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
       </fieldset>
 
-      <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
       <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
     </form>
 
     <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
     <script>
-      const API_URL = 'PEGAR_AQUI_URL_WEB_APP';
+      const API_URL = 'https://script.google.com/macros/s/AKfycbwgY7rMjWOszO-dsJoXv5wJwqZkgKIQHyL49pevd9vDVBFP8rF8SSnSPXnAH98fTgF7/exec';
       const LISTAS_BASE_PATH = './';
 
       const JSON_FILES = {
@@ -335,12 +348,17 @@
 
       const state = {
         catalogos: {},
-        pendingRequests: new Map()
+        pendingRequests: new Map(),
+        institutionValidated: false,
+        validatedKey: ''
       };
 
       const form = document.getElementById('formRegistro');
+      const btnValidarParte1 = document.getElementById('btnValidarParte1');
       const btnEnviar = document.getElementById('btnEnviar');
       const mensajeGlobal = document.getElementById('mensajeGlobal');
+      const resumenValidacion = document.getElementById('resumenValidacion');
+      const parte2 = document.getElementById('parte2');
 
       const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
       const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
@@ -370,6 +388,7 @@
         } catch (error) {
           console.error(error);
           mostrarMensajeGlobal('Ocurrió un problema al cargar las listas del formulario. Revise las rutas de los archivos JSON e intente nuevamente.', 'error');
+          btnValidarParte1.disabled = true;
           btnEnviar.disabled = true;
         }
       }
@@ -398,20 +417,24 @@
           radio.addEventListener('change', () => {
             limpiarError(campoTipoInstitucion);
             actualizarCamposCondicionales();
+            resetValidacionInstitucion();
           });
         });
 
         entidadSeleccion.addEventListener('change', () => {
           limpiarError(campoEntidadSeleccion);
+          resetValidacionInstitucion();
         });
 
         rucInstitucion.addEventListener('input', () => {
           rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
           limpiarError(campoRucInstitucion);
+          resetValidacionInstitucion();
         });
 
         paisMision.addEventListener('change', () => {
           limpiarError(campoPaisMision);
+          resetValidacionInstitucion();
         });
 
         tipoDocumento.addEventListener('change', () => {
@@ -442,6 +465,7 @@
           bloquearPegado(input);
         });
 
+        btnValidarParte1.addEventListener('click', validarInstitucionYContinuar);
         form.addEventListener('submit', enviarFormulario);
       }
 
@@ -573,8 +597,21 @@
         }
       }
 
-      function limpiarErroresFormulario() {
-        document.querySelectorAll('.campo').forEach((campo) => limpiarError(campo));
+      function limpiarErroresParte1() {
+        [campoTipoInstitucion, campoEntidadSeleccion, campoRucInstitucion, campoPaisMision].forEach(limpiarError);
+        ocultarMensajeGlobal();
+      }
+
+      function limpiarErroresParte2() {
+        [
+          document.getElementById('campoTipoDocumento'),
+          document.getElementById('campoNumeroDocumento'),
+          document.getElementById('campoNombreCompleto'),
+          document.getElementById('campoCelular'),
+          document.getElementById('campoConfirmarCelular'),
+          document.getElementById('campoCorreo'),
+          document.getElementById('campoConfirmarCorreo')
+        ].forEach(limpiarError);
         ocultarMensajeGlobal();
       }
 
@@ -588,22 +625,49 @@
         mensajeGlobal.className = 'mensaje-global';
       }
 
-      function validarFormulario() {
-        limpiarErroresFormulario();
+      function resetValidacionInstitucion() {
+        state.institutionValidated = false;
+        state.validatedKey = '';
+        parte2.classList.add('seccion-oculta');
+        resumenValidacion.textContent = '';
+        resumenValidacion.classList.add('seccion-oculta');
+      }
 
+      function obtenerLabelTipo(tipo) {
+        const mapa = {
+          institucion_publica: 'Instituciones y entidades públicas',
+          organizacion_politica: 'Organización política',
+          mision_observacion: 'Misión de observación',
+          encuestadora_vigente: 'Encuestadoras vigentes'
+        };
+        return mapa[tipo] || '';
+      }
+
+      function construirClaveLocal() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        const entidadNombre = valorLimpio(entidadSeleccion.value);
+        const paisNombre = valorLimpio(paisMision.value);
+        if (tipo === 'mision_observacion') {
+          return [tipo, entidadNombre, paisNombre].map(normalizarClaveParte).join('|');
+        }
+        return [tipo, entidadNombre].map(normalizarClaveParte).join('|');
+      }
+
+      function normalizarClaveParte(valor) {
+        return String(valor || '')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim();
+      }
+
+      function validarParte1() {
+        limpiarErroresParte1();
         const errores = [];
         const tipo = obtenerTipoInstitucionSeleccionado();
         const entidadNombre = valorLimpio(entidadSeleccion.value);
         const paisNombre = valorLimpio(paisMision.value);
         const ruc = soloDigitos(rucInstitucion.value);
-        const doc = soloDigitos(numeroDocumento.value);
-        const nombre = valorLimpio(nombreCompleto.value);
-        const cel = valorLimpio(celular.value);
-        const cel2 = valorLimpio(confirmarCelular.value);
-        const celNorm = normalizarCelularComparacion(celular.value);
-        const cel2Norm = normalizarCelularComparacion(confirmarCelular.value);
-        const correo = normalizarCorreo(correoElectronico.value);
-        const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
 
         if (!tipo) {
           errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
@@ -624,6 +688,27 @@
         if (!campoPaisMision.classList.contains('seccion-oculta') && !paisNombre) {
           errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
         }
+
+        if (errores.length) {
+          errores.forEach((error) => mostrarError(error.campo, error.mensaje));
+          mostrarMensajeGlobal('Revise los campos resaltados antes de validar el registro.', 'error');
+          errores[0].campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        return { valido: errores.length === 0, errores };
+      }
+
+      function validarParte2() {
+        limpiarErroresParte2();
+        const errores = [];
+        const doc = soloDigitos(numeroDocumento.value);
+        const nombre = valorLimpio(nombreCompleto.value);
+        const cel = valorLimpio(celular.value);
+        const cel2 = valorLimpio(confirmarCelular.value);
+        const celNorm = normalizarCelularComparacion(celular.value);
+        const cel2Norm = normalizarCelularComparacion(confirmarCelular.value);
+        const correo = normalizarCorreo(correoElectronico.value);
+        const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
 
         if (!tipoDocumento.value) {
           errores.push({ campo: document.getElementById('campoTipoDocumento'), mensaje: 'Seleccione el tipo de documento de identidad.' });
@@ -676,9 +761,55 @@
         return { valido: errores.length === 0, errores };
       }
 
-      function construirPayload() {
-        const tipo = obtenerTipoInstitucionSeleccionado();
+      async function validarInstitucionYContinuar() {
+        const validacion = validarParte1();
+        if (!validacion.valido) return;
 
+        if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
+          mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
+          return;
+        }
+
+        btnValidarParte1.disabled = true;
+        mostrarMensajeGlobal('Validando la institución o entidad registrada...', 'ok');
+
+        const payload = {
+          tipoInstitucion: obtenerTipoInstitucionSeleccionado(),
+          tipoInstitucionLabel: obtenerLabelTipo(obtenerTipoInstitucionSeleccionado()),
+          entidadNombre: valorLimpio(entidadSeleccion.value),
+          paisNombre: valorLimpio(paisMision.value),
+          ruc: soloDigitos(rucInstitucion.value)
+        };
+
+        try {
+          const respuesta = await postToAppsScript('checkInstitution', payload);
+
+          if (respuesta.status === 'duplicate') {
+            mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
+            mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
+            campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            resetValidacionInstitucion();
+            return;
+          }
+
+          state.institutionValidated = true;
+          state.validatedKey = construirClaveLocal();
+          parte2.classList.remove('seccion-oculta');
+          resumenValidacion.textContent = 'Institución o entidad validada correctamente. Puede continuar con la segunda parte del registro.';
+          resumenValidacion.classList.remove('seccion-oculta');
+          mostrarMensajeGlobal('La validación fue exitosa. Complete la segunda parte del registro.', 'ok');
+          parte2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (error) {
+          console.error(error);
+          mostrarMensajeGlobal('No se pudo validar la institución o entidad. Revise la publicación de la Web App e intente nuevamente.', 'error');
+          resetValidacionInstitucion();
+        } finally {
+          btnValidarParte1.disabled = false;
+        }
+      }
+
+      function construirPayloadFinal() {
+        const tipo = obtenerTipoInstitucionSeleccionado();
         return {
           tipoInstitucion: tipo,
           tipoInstitucionLabel: obtenerLabelTipo(tipo),
@@ -696,49 +827,23 @@
         };
       }
 
-      function obtenerLabelTipo(tipo) {
-        const mapa = {
-          institucion_publica: 'Instituciones y entidades públicas',
-          organizacion_politica: 'Organización política',
-          mision_observacion: 'Misión de observación',
-          encuestadora_vigente: 'Encuestadoras vigentes'
-        };
-        return mapa[tipo] || '';
-      }
-
       async function enviarFormulario(event) {
         event.preventDefault();
-        const validacion = validarFormulario();
 
-        if (!validacion.valido) return;
-        if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbwgY7rMjWOszO-dsJoXv5wJwqZkgKIQHyL49pevd9vDVBFP8rF8SSnSPXnAH98fTgF7/exec') {
-          mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
+        if (!state.institutionValidated || state.validatedKey !== construirClaveLocal()) {
+          mostrarMensajeGlobal('Primero debe validar la institución o entidad antes de continuar con el registro.', 'error');
+          document.getElementById('parte1').scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
 
-        btnEnviar.disabled = true;
-        mostrarMensajeGlobal('Validando la institución o entidad registrada...', 'ok');
+        const validacion = validarParte2();
+        if (!validacion.valido) return;
 
-        const payload = construirPayload();
+        btnEnviar.disabled = true;
+        mostrarMensajeGlobal('Enviando registro...', 'ok');
 
         try {
-          const verificacion = await postToAppsScript('checkInstitution', {
-            tipoInstitucion: payload.tipoInstitucion,
-            tipoInstitucionLabel: payload.tipoInstitucionLabel,
-            entidadNombre: payload.entidadNombre,
-            paisNombre: payload.paisNombre
-          });
-
-          if (verificacion.status === 'duplicate') {
-            mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
-            mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
-            campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            btnEnviar.disabled = false;
-            return;
-          }
-
-          mostrarMensajeGlobal('Enviando registro...', 'ok');
-          const respuesta = await postToAppsScript('submitRegistration', payload);
+          const respuesta = await postToAppsScript('submitRegistration', construirPayloadFinal());
 
           if (respuesta.status === 'success') {
             mostrarPantallaFinal();
@@ -746,9 +851,10 @@
           }
 
           if (respuesta.status === 'duplicate') {
+            resetValidacionInstitucion();
             mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
             mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
-            campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('parte1').scrollIntoView({ behavior: 'smooth', block: 'start' });
           } else {
             mostrarMensajeGlobal(respuesta.message || 'Ocurrió un error al enviar el registro. Intente nuevamente.', 'error');
           }
@@ -775,7 +881,7 @@
           const timeoutId = window.setTimeout(() => {
             state.pendingRequests.delete(requestId);
             reject(new Error('Tiempo de espera agotado.'));
-          }, 25000);
+          }, 20000);
 
           state.pendingRequests.set(requestId, { resolve, reject, timeoutId });
           enviarPostOculto({ action, requestId, ...payload });
