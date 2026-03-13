@@ -194,7 +194,7 @@
 
     .telefono-prefijo,
     .telefono-separador {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1;
       font-weight: normal;
       color: #4b5563;
@@ -207,9 +207,9 @@
     }
 
     .telefono-codigo {
-      width: 56px !important;
-      min-width: 56px !important;
-      max-width: 56px !important;
+      width: 52px !important;
+      min-width: 52px !important;
+      max-width: 52px !important;
       text-align: center;
       font-weight: bold;
     }
@@ -245,9 +245,9 @@
       }
 
       .telefono-codigo {
-        width: 52px !important;
-        min-width: 52px !important;
-        max-width: 52px !important;
+        width: 50px !important;
+        min-width: 50px !important;
+        max-width: 50px !important;
       }
 
       .telefono-numero {
@@ -464,9 +464,11 @@
           return [key, await response.json()];
         })
       );
+
       resultados.forEach(([key, data]) => {
         state.catalogos[key] = Array.isArray(data) ? data : [];
       });
+
       poblarPaises();
     }
 
@@ -829,16 +831,6 @@
       };
     }
 
-    function mostrarPantallaFinalOptimista() {
-      document.body.innerHTML = `
-        <div class="pantalla-final">
-          <h1 style="color:#003366;">Registro completado</h1>
-          <p>La información se encuentra en proceso de registro.</p>
-        </div>
-        <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
-      `;
-    }
-
     async function enviarFormulario(event) {
       event.preventDefault();
 
@@ -857,13 +849,37 @@
       }
 
       const payload = construirPayload();
-      mostrarPantallaFinalOptimista();
 
-      enviarPostOculto({  
-      action: 'submitRegistration',
-      requestId: `req_${Date.now()}`,
-      ...payload
-    });
+      try {
+        mostrarMensajeGlobal('Procesando registro...', 'info');
+
+        const respuesta = await postToAppsScript('submitRegistration', payload);
+
+        if (respuesta.status === 'success') {
+          document.body.innerHTML = `
+            <div class="pantalla-final">
+              <h1 style="color:#003366;">Registro completado</h1>
+              <p>Se ha realizado el registro correctamente.</p>
+            </div>
+          `;
+          return;
+        }
+
+        if (respuesta.status === 'duplicate') {
+          mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
+          mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
+          parte2.classList.add('seccion-oculta');
+          state.institucionValidada = false;
+          campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        mostrarMensajeGlobal(respuesta.message || 'Ocurrió un error al registrar la información.', 'error');
+
+      } catch (error) {
+        console.error(error);
+        mostrarMensajeGlobal('No se pudo completar el registro. Revise la publicación de la Web App e intente nuevamente.', 'error');
+      }
     }
 
     function postToAppsScript(action, payload) {
@@ -880,14 +896,7 @@
     }
 
     function enviarPostOculto(data) {
-      const targetFrame = document.getElementById('submitFrame') || (() => {
-        const iframe = document.createElement('iframe');
-        iframe.id = 'submitFrame';
-        iframe.name = 'submitFrame';
-        iframe.className = 'iframe-oculto';
-        document.body.appendChild(iframe);
-        return iframe;
-      })();
+      const targetFrame = document.getElementById('submitFrame');
 
       const tempForm = document.createElement('form');
       tempForm.method = 'POST';
