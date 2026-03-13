@@ -54,11 +54,6 @@
       margin-top: 8px;
     }
 
-    .req {
-      color: #c41e32;
-      font-weight: bold;
-    }
-
     select,
     input[type="text"],
     input[type="email"],
@@ -117,7 +112,8 @@
 
     .campo.tiene-error select,
     .campo.tiene-error input,
-    .campo.tiene-error .grupo-radios {
+    .campo.tiene-error .grupo-radios,
+    .campo.tiene-error .telefono-wrap {
       border-color: var(--onpe-borde-error);
     }
 
@@ -195,6 +191,61 @@
       font-size: 0.95rem;
     }
 
+    .req {
+      color: var(--onpe-borde-error);
+      font-weight: bold;
+    }
+
+    .texto-obligatorio {
+      color: var(--onpe-borde-error);
+      font-weight: bold;
+    }
+
+    .telefono-wrap {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      border: 1px solid #c7d3e5;
+      border-radius: 4px;
+      padding: 6px 8px;
+      background: #fff;
+    }
+
+    .telefono-plus {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #111827;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .telefono-input {
+      margin-top: 0 !important;
+      min-width: 0 !important;
+      width: auto;
+      border: 1px solid #c7d3e5;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .telefono-codigo {
+      width: 72px;
+      text-align: center;
+      flex: 0 0 72px;
+    }
+
+    .telefono-numero {
+      flex: 1 1 auto;
+    }
+
+    .telefono-separador {
+      color: #6b7280;
+      font-weight: bold;
+      flex: 0 0 auto;
+    }
+
     @media (max-width: 600px) {
       body {
         padding: 10px;
@@ -216,6 +267,15 @@
         width: 100%;
         min-width: 0;
       }
+
+      .telefono-wrap {
+        gap: 6px;
+      }
+
+      .telefono-codigo {
+        width: 64px;
+        flex-basis: 64px;
+      }
     }
   </style>
 </head>
@@ -228,10 +288,10 @@
     class="banner"
   />
 
-  <p>Complete la siguiente información. Todas las preguntas son obligatorias.</p>
+  <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
 
   <form id="formRegistro" novalidate>
-    <fieldset id="parte1">
+    <fieldset id="validacionInstitucion">
       <legend>Validación de la institución o entidad</legend>
       <p class="subtitulo-parte">Primero validaremos si la institución o entidad ya cuenta con un registro previo.</p>
 
@@ -271,7 +331,7 @@
       <button id="btnValidarInstitucion" type="button" class="boton">Validar registro</button>
     </fieldset>
 
-    <fieldset id="parte2" class="seccion-oculta">
+    <fieldset id="datosPersona" class="seccion-oculta">
       <legend>Datos de la persona a registrar</legend>
 
       <div class="campo" id="campoTipoDocumento">
@@ -297,14 +357,24 @@
       </div>
 
       <div class="campo" id="campoCelular">
-        <label for="celular">Ingrese el número de celular <span class="req">*</span></label>
-        <input id="celular" type="text" inputmode="tel" maxlength="18" autocomplete="off" placeholder="+51 999999999" />
+        <label>Ingrese el número de celular <span class="req">*</span></label>
+        <div class="telefono-wrap">
+          <span class="telefono-plus">+</span>
+          <input id="codigoCelular" class="telefono-input telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="Código de país" />
+          <span class="telefono-separador">|</span>
+          <input id="numeroCelular" class="telefono-input telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" aria-label="Número de celular" />
+        </div>
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoConfirmarCelular">
-        <label for="confirmarCelular">Confirme el número de celular <span class="req">*</span></label>
-        <input id="confirmarCelular" type="text" inputmode="tel" maxlength="18" autocomplete="off" placeholder="+51 999999999" />
+        <label>Confirme el número de celular <span class="req">*</span></label>
+        <div class="telefono-wrap">
+          <span class="telefono-plus">+</span>
+          <input id="codigoConfirmarCelular" class="telefono-input telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="Confirmación del código de país" />
+          <span class="telefono-separador">|</span>
+          <input id="numeroConfirmarCelular" class="telefono-input telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" aria-label="Confirmación del número de celular" />
+        </div>
         <div class="field-error"></div>
       </div>
 
@@ -341,10 +411,10 @@
     };
 
     const LABELS_ENTIDAD = {
-      institucion_publica: 'Seleccione el nombre de la institución o entidad pública',
-      organizacion_politica: 'Seleccione la organización política',
-      mision_observacion: 'Seleccione la misión de observación',
-      encuestadora_vigente: 'Seleccione la encuestadora vigente'
+      institucion_publica: 'Seleccione el nombre de la institución o entidad pública <span class="req">*</span>',
+      organizacion_politica: 'Seleccione la organización política <span class="req">*</span>',
+      mision_observacion: 'Seleccione la misión de observación <span class="req">*</span>',
+      encuestadora_vigente: 'Seleccione la encuestadora vigente <span class="req">*</span>'
     };
 
     const PLACEHOLDERS_ENTIDAD = {
@@ -370,7 +440,7 @@
 
     const form = document.getElementById('formRegistro');
     const mensajeGlobal = document.getElementById('mensajeGlobal');
-    const parte2 = document.getElementById('parte2');
+    const datosPersona = document.getElementById('datosPersona');
     const btnEnviar = document.getElementById('btnEnviar');
     const btnValidarInstitucion = document.getElementById('btnValidarInstitucion');
 
@@ -386,8 +456,10 @@
     const tipoDocumento = document.getElementById('tipoDocumento');
     const numeroDocumento = document.getElementById('numeroDocumento');
     const nombreCompleto = document.getElementById('nombreCompleto');
-    const celular = document.getElementById('celular');
-    const confirmarCelular = document.getElementById('confirmarCelular');
+    const codigoCelular = document.getElementById('codigoCelular');
+    const numeroCelular = document.getElementById('numeroCelular');
+    const codigoConfirmarCelular = document.getElementById('codigoConfirmarCelular');
+    const numeroConfirmarCelular = document.getElementById('numeroConfirmarCelular');
     const correoElectronico = document.getElementById('correoElectronico');
     const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
 
@@ -430,7 +502,7 @@
       document.querySelectorAll('input[name="tipoInstitucion"]').forEach((radio) => {
         radio.addEventListener('change', async () => {
           state.institucionValidada = false;
-          parte2.classList.add('seccion-oculta');
+          datosPersona.classList.add('seccion-oculta');
           limpiarErroresFormulario();
           ocultarMensajeGlobal();
           actualizarCamposCondicionales();
@@ -443,7 +515,7 @@
 
       entidadSeleccion.addEventListener('change', () => {
         state.institucionValidada = false;
-        parte2.classList.add('seccion-oculta');
+        datosPersona.classList.add('seccion-oculta');
         limpiarError(campoEntidadSeleccion);
         ocultarMensajeGlobal();
       });
@@ -451,14 +523,14 @@
       rucInstitucion.addEventListener('input', () => {
         rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
         state.institucionValidada = false;
-        parte2.classList.add('seccion-oculta');
+        datosPersona.classList.add('seccion-oculta');
         limpiarError(campoRucInstitucion);
         ocultarMensajeGlobal();
       });
 
       paisMision.addEventListener('change', () => {
         state.institucionValidada = false;
-        parte2.classList.add('seccion-oculta');
+        datosPersona.classList.add('seccion-oculta');
         limpiarError(campoPaisMision);
         ocultarMensajeGlobal();
       });
@@ -472,9 +544,9 @@
 
       nombreCompleto.addEventListener('input', () => limpiarError(document.getElementById('campoNombreCompleto')));
 
-      [celular, confirmarCelular].forEach((input) => {
+      [codigoCelular, codigoConfirmarCelular, numeroCelular, numeroConfirmarCelular].forEach((input) => {
         input.addEventListener('input', () => {
-          input.value = sanitizarCelular(input.value).slice(0, 18);
+          input.value = soloDigitos(input.value).slice(0, input.maxLength || 15);
           limpiarError(input.closest('.campo'));
         });
         bloquearPegado(input);
@@ -495,27 +567,6 @@
       ['paste', 'drop'].forEach((eventName) => {
         input.addEventListener(eventName, (event) => event.preventDefault());
       });
-    }
-
-    function sanitizarCelular(valor) {
-      const texto = String(valor || '');
-      let out = '';
-      let tieneEspacio = false;
-
-      for (let i = 0; i < texto.length; i++) {
-        const ch = texto[i];
-
-        if (/\d/.test(ch)) {
-          out += ch;
-        } else if (ch === '+' && out.length === 0) {
-          out += ch;
-        } else if (ch === ' ' && out.startsWith('+') && !tieneEspacio) {
-          out += ch;
-          tieneEspacio = true;
-        }
-      }
-
-      return out;
     }
 
     async function cargarRegistradosPorTipo(tipo) {
@@ -570,7 +621,7 @@
 
     function poblarEntidad(tipo) {
       const lista = state.catalogos[tipo] || [];
-      labelEntidadSeleccion.innerHTML = (LABELS_ENTIDAD[tipo] || 'Seleccione una opción') + ' <span class="req">*</span>';
+      labelEntidadSeleccion.innerHTML = LABELS_ENTIDAD[tipo] || 'Seleccione una opción <span class="req">*</span>';
 
       const valorActual = entidadSeleccion.value;
       entidadSeleccion.innerHTML = '';
@@ -624,8 +675,12 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
     }
 
-    function esCelularValido(valor) {
-      return /^\+\d{2,3}\s\d{6,15}$/.test(valor);
+    function esCelularValido(codigo, numero) {
+      return /^\d{1,3}$/.test(codigo) && /^\d{6,15}$/.test(numero);
+    }
+
+    function construirCelular(codigo, numero) {
+      return '+' + valorLimpio(codigo) + ' ' + valorLimpio(numero);
     }
 
     function normalizarClave(valor) {
@@ -728,8 +783,10 @@
       const errores = [];
       const doc = soloDigitos(numeroDocumento.value);
       const nombre = valorLimpio(nombreCompleto.value);
-      const cel = valorLimpio(celular.value);
-      const cel2 = valorLimpio(confirmarCelular.value);
+      const cod1 = soloDigitos(codigoCelular.value);
+      const num1 = soloDigitos(numeroCelular.value);
+      const cod2 = soloDigitos(codigoConfirmarCelular.value);
+      const num2 = soloDigitos(numeroConfirmarCelular.value);
       const correo = normalizarCorreo(correoElectronico.value);
       const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
 
@@ -749,15 +806,17 @@
         errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos completos de la persona a registrar.' });
       }
 
-      if (!cel) {
-        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
-      } else if (!esCelularValido(cel)) {
-        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número válido con código de país. Ejemplo: +51 999999999' });
+      if (!cod1 || !num1) {
+        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el código de país y el número de celular.' });
+      } else if (!esCelularValido(cod1, num1)) {
+        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un código de país válido y un número de celular válido.' });
       }
 
-      if (!cel2) {
-        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el número de celular.' });
-      } else if (cel !== cel2) {
+      if (!cod2 || !num2) {
+        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el código de país y el número de celular.' });
+      } else if (!esCelularValido(cod2, num2)) {
+        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme un código de país válido y un número de celular válido.' });
+      } else if (construirCelular(cod1, num1) !== construirCelular(cod2, num2)) {
         errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
       }
 
@@ -813,16 +872,16 @@
         if (existe) {
           mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
           mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
-          parte2.classList.add('seccion-oculta');
+          datosPersona.classList.add('seccion-oculta');
           state.institucionValidada = false;
           campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
 
         state.institucionValidada = true;
-        parte2.classList.remove('seccion-oculta');
+        datosPersona.classList.remove('seccion-oculta');
         mostrarMensajeGlobal('La institución o entidad no presenta un registro previo. Puede continuar.', 'ok');
-        parte2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        datosPersona.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {
         console.error(error);
         mostrarMensajeGlobal('No se pudo validar la institución o entidad. Intente nuevamente.', 'error');
@@ -846,7 +905,7 @@
           : '',
         numeroDocumento: soloDigitos(numeroDocumento.value),
         nombreCompleto: valorLimpio(nombreCompleto.value),
-        celular: valorLimpio(celular.value),
+        celular: construirCelular(soloDigitos(codigoCelular.value), soloDigitos(numeroCelular.value)),
         correoElectronico: normalizarCorreo(correoElectronico.value)
       };
     }
@@ -856,7 +915,7 @@
 
       if (!state.institucionValidada) {
         mostrarMensajeGlobal('Primero debe validar la institución o entidad antes de continuar.', 'error');
-        document.getElementById('parte1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('validacionInstitucion').scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
 
@@ -881,7 +940,7 @@
         }
 
         if (respuesta.status === 'duplicate') {
-          parte2.classList.add('seccion-oculta');
+          datosPersona.classList.add('seccion-oculta');
           state.institucionValidada = false;
 
           const tipo = obtenerTipoInstitucionSeleccionado();
