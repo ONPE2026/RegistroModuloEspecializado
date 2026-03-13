@@ -15,9 +15,7 @@
       --onpe-gris: #4b5563;
       --rojo-req: #c41e32;
     }
-
     * { box-sizing: border-box; }
-
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -27,16 +25,13 @@
       background-color: #f5f7fb;
       color: #1f2937;
     }
-
     h1 {
       margin-bottom: 5px;
       color: var(--onpe-azul);
       text-align: center;
       font-size: 1.8rem;
     }
-
     p { margin-top: 0.75rem; }
-
     fieldset {
       margin-top: 15px;
       padding: 15px;
@@ -44,17 +39,14 @@
       border: 1px solid var(--onpe-azul-claro);
       background-color: #ffffff;
     }
-
     legend {
       font-weight: bold;
       color: var(--onpe-azul);
     }
-
     label {
       display: block;
       margin-top: 8px;
     }
-
     select,
     input[type="text"],
     input[type="email"],
@@ -66,11 +58,8 @@
       border-radius: 4px;
       font-size: 0.98rem;
     }
-
     input[type="radio"] { margin-right: 6px; }
-
     .seccion-oculta { display: none; }
-
     .boton {
       margin-top: 20px;
       padding: 12px 18px;
@@ -81,29 +70,23 @@
       border: none;
       border-radius: 4px;
     }
-
     .boton:hover { opacity: 0.92; }
     .boton:disabled { opacity: 0.65; cursor: not-allowed; }
-
     .banner {
       max-width: 100%;
       height: auto;
       margin: 10px auto 20px auto;
       display: block;
     }
-
     .opciones-verticales label { display: block; margin-top: 6px; }
     .campo { margin-top: 12px; }
-
     .campo.tiene-error select,
     .campo.tiene-error input,
     .campo.tiene-error .grupo-radios,
     .campo.tiene-error .telefono-wrap {
       border-color: var(--onpe-borde-error);
     }
-
     .grupo-radios { margin-top: 6px; padding: 4px 0; }
-
     .field-error {
       display: none;
       margin-top: 6px;
@@ -113,9 +96,7 @@
       color: var(--onpe-texto-error);
       font-size: 0.93rem;
     }
-
     .field-error.activo { display: block; }
-
     .mensaje-global {
       display: none;
       margin-top: 16px;
@@ -123,25 +104,21 @@
       border-radius: 4px;
       font-weight: bold;
     }
-
     .mensaje-global.error {
       display: block;
       background: var(--onpe-fondo-error);
       color: var(--onpe-texto-error);
     }
-
     .mensaje-global.ok {
       display: block;
       background: #edf9f3;
       color: var(--onpe-verde);
     }
-
     .mensaje-global.info {
       display: block;
       background: #eef4ff;
       color: var(--onpe-azul);
     }
-
     .pantalla-final {
       max-width: 800px;
       margin: 40px auto;
@@ -152,9 +129,7 @@
       border-radius: 6px;
       padding: 28px 20px;
     }
-
     .pantalla-final h1 { margin-top: 0; }
-
     .iframe-oculto {
       width: 0;
       height: 0;
@@ -162,23 +137,19 @@
       visibility: hidden;
       position: absolute;
     }
-
     .subtitulo-parte {
       margin: 0 0 8px 0;
       color: var(--onpe-gris);
       font-size: 0.95rem;
     }
-
     .req {
       color: var(--rojo-req);
       font-weight: bold;
     }
-
     .texto-obligatorio {
       color: var(--rojo-req);
       font-weight: bold;
     }
-
     .telefono-wrap {
       display: flex;
       align-items: center;
@@ -191,7 +162,6 @@
       width: fit-content;
       max-width: 100%;
     }
-
     .telefono-prefijo,
     .telefono-separador {
       font-size: 1.05rem;
@@ -200,12 +170,10 @@
       color: #4b5563;
       flex: 0 0 auto;
     }
-
     .telefono-codigo,
     .telefono-numero {
       margin-top: 0 !important;
     }
-
     .telefono-codigo {
       width: 52px !important;
       min-width: 52px !important;
@@ -213,18 +181,15 @@
       text-align: center;
       font-weight: bold;
     }
-
     .telefono-numero {
       width: 210px !important;
       min-width: 150px !important;
       max-width: 230px !important;
     }
-
     @media (max-width: 600px) {
       body { padding: 10px; font-size: 15px; }
       h1 { font-size: 1.45rem; }
       fieldset { padding: 12px; }
-
       select,
       input[type="text"],
       input[type="email"],
@@ -232,24 +197,20 @@
         width: 100%;
         min-width: 0;
       }
-
       .telefono-wrap {
         width: 100%;
         gap: 8px;
         padding: 10px;
       }
-
       .telefono-prefijo,
       .telefono-separador {
         font-size: 1rem;
       }
-
       .telefono-codigo {
         width: 50px !important;
         min-width: 50px !important;
         max-width: 50px !important;
       }
-
       .telefono-numero {
         flex: 1 1 auto;
         width: auto !important;
@@ -261,13 +222,11 @@
 </head>
 <body>
   <h1>Registro para el módulo especializado de la web de resultados de las Elecciones Generales 2026</h1>
-
   <img
     src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
     alt="Banner ONPE EG 2026"
     class="banner"
   />
-
   <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
 
   <form id="formRegistro" novalidate>
@@ -379,7 +338,7 @@
   <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbz6zlUGYmsGQCAAUz0NZTVy0wPIw7PIRR4CB_8rMMESGgTTqqZ1At00w1li6NORJbXx/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxFWcD9BpuljtG1thlCSKfeWFYffuLuxk4ijm5294gKTVTUIToJkHXMwkupYu0gvFwo/exec';
     const LISTAS_BASE_PATH = './';
 
     const JSON_FILES = {
@@ -843,7 +802,7 @@
       const validacion2 = validarParte2('submit');
       if (!validacion2.valido) return;
 
-      if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbz6zlUGYmsGQCAAUz0NZTVy0wPIw7PIRR4CB_8rMMESGgTTqqZ1At00w1li6NORJbXx/exec') {
+      if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
         mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
         return;
       }
