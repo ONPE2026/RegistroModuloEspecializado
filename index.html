@@ -195,7 +195,7 @@
 
     .telefono-prefijo,
     .telefono-separador {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       line-height: 1;
       font-weight: normal;
       color: #4b5563;
@@ -208,9 +208,9 @@
     }
 
     .telefono-codigo {
-      width: 64px !important;
-      min-width: 64px !important;
-      max-width: 64px !important;
+      width: 58px !important;
+      min-width: 58px !important;
+      max-width: 58px !important;
       text-align: center;
       font-weight: bold;
     }
@@ -242,13 +242,13 @@
 
       .telefono-prefijo,
       .telefono-separador {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
       }
 
       .telefono-codigo {
-        width: 58px !important;
-        min-width: 58px !important;
-        max-width: 58px !important;
+        width: 54px !important;
+        min-width: 54px !important;
+        max-width: 54px !important;
       }
 
       .telefono-numero {
@@ -806,25 +806,23 @@
       try {
         btnValidarInstitucion.disabled = true;
 
-        if (!state.registradosPorTipo[tipo]) await cargarRegistradosPorTipo(tipo);
-
-        const items = state.registradosPorTipo[tipo] || [];
-        const existe = items.some((item) => {
-          const mismaEntidad = normalizarClave(item.entidadNombre) === normalizarClave(entidadNombre);
-          if (!mismaEntidad) return false;
-          if (tipo === 'mision_observacion') {
-            return normalizarClave(item.paisNombre) === normalizarClave(paisNombre);
-          }
-          return true;
+        const resp = await postToAppsScript('checkInstitution', {
+          tipoInstitucion: tipo,
+          entidadNombre,
+          paisNombre
         });
 
-        if (existe) {
+        if (resp.status === 'duplicate') {
           mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
           mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
           parte2.classList.add('seccion-oculta');
           state.institucionValidada = false;
           campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
+        }
+
+        if (resp.status !== 'available') {
+          throw new Error(resp.message || 'No se pudo validar el registro.');
         }
 
         state.institucionValidada = true;
@@ -859,6 +857,16 @@
       };
     }
 
+    function mostrarPantallaFinalOptimista() {
+      document.body.innerHTML = `
+        <div class="pantalla-final">
+          <h1 style="color:#003366;">Registro completado</h1>
+          <p>La información se encuentra en proceso de registro.</p>
+        </div>
+        <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
+      `;
+    }
+
     async function enviarFormulario(event) {
       event.preventDefault();
 
@@ -878,36 +886,12 @@
 
       const payload = construirPayload();
 
-      try {
-        mostrarMensajeGlobal('Procesando registro...', 'info');
-
-        const respuesta = await postToAppsScript('submitRegistration', payload);
-
-        if (respuesta.status === 'success') {
-          document.body.innerHTML = `
-            <div class="pantalla-final">
-              <h1 style="color:#003366;">Registro completado</h1>
-              <p>Se ha realizado el registro correctamente.</p>
-            </div>
-          `;
-          return;
-        }
-
-        if (respuesta.status === 'duplicate') {
-          mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
-          mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
-          parte2.classList.add('seccion-oculta');
-          state.institucionValidada = false;
-          campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
-
-        mostrarMensajeGlobal(respuesta.message || 'Ocurrió un error al registrar la información.', 'error');
-
-      } catch (error) {
-        console.error(error);
-        mostrarMensajeGlobal('No se pudo completar el registro. Revise la publicación de la Web App e intente nuevamente.', 'error');
-      }
+      mostrarPantallaFinalOptimista();
+      enviarPostOculto({
+        action: 'queueRegistration',
+        requestId: `req_${Date.now()}`,
+        ...payload
+      });
     }
 
     function postToAppsScript(action, payload) {
