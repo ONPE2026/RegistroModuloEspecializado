@@ -1,30 +1,39 @@
 [
-  {
-    "id": "op_demo_01",
-    "nombre": "Organización Política 1"
-  },
-  {
-    "id": "op_demo_02",
-    "nombre": "Organización Política 2"
-  },
-  {
-    "id": "op_demo_03",
-    "nombre": "Organización Política 3"
-  },
-  {
-    "id": "op_demo_04",
-    "nombre": "Organización Política 4"
-  },
-  {
-    "id": "op_demo_05",
-    "nombre": "Organización Política 5"
-  },
-  {
-    "id": "op_demo_06",
-    "nombre": "Organización Política 6"
-  },
-  {
-    "id": "op_demo_07",
-    "nombre": "Organización Política 7"
-  }
+  { "nombre": "AHORA NACIÓN - AN" },
+  { "nombre": "ALIANZA ELECTORAL VENCEREMOS" },
+  { "nombre": "ALIANZA PARA EL PROGRESO" },
+  { "nombre": "AVANZA PAIS - PARTIDO DE INTEGRACION SOCIAL" },
+  { "nombre": "FE EN EL PERÚ" },
+  { "nombre": "FRENTE POPULAR AGRÍCOLA FIA DEL PERÚ" },
+  { "nombre": "FUERZA POPULAR" },
+  { "nombre": "FUERZA Y LIBERTAD" },
+  { "nombre": "JUNTOS POR EL PERU" },
+  { "nombre": "LIBERTAD POPULAR" },
+  { "nombre": "PARTIDO APRISTA PERUANO" },
+  { "nombre": "PARTIDO CÍVICO OBRAS" },
+  { "nombre": "PARTIDO DE LOS TRABAJADORES Y EMPRENDEDORES PTE - PERÚ" },
+  { "nombre": "PARTIDO DEL BUEN GOBIERNO" },
+  { "nombre": "PARTIDO DEMÓCRATA UNIDO PERÚ" },
+  { "nombre": "PARTIDO DEMÓCRATA VERDE" },
+  { "nombre": "PARTIDO DEMOCRÁTICO FEDERAL" },
+  { "nombre": "PARTIDO DEMOCRÁTICO SOMOS PERÚ" },
+  { "nombre": "PARTIDO FRENTE DE LA ESPERANZA 2021" },
+  { "nombre": "PARTIDO MORADO" },
+  { "nombre": "PARTIDO PAÍS PARA TODOS" },
+  { "nombre": "PARTIDO PATRIOTICO DEL PERU" },
+  { "nombre": "PARTIDO POLÍTICO COOPERACIÓN POPULAR" },
+  { "nombre": "PARTIDO POLÍTICO INTEGRIDAD DEMOCRÁTICA" },
+  { "nombre": "PARTIDO POLÍTICO NACIONAL PERÚ LIBRE" },
+  { "nombre": "PARTIDO POLÍTICO PERÚ ACCIÓN" },
+  { "nombre": "PARTIDO POLÍTICO PERÚ PRIMERO" },
+  { "nombre": "PARTIDO POLÍTICO PRIN" },
+  { "nombre": "PARTIDO SÍCREO" },
+  { "nombre": "PERÚ MODERNO" },
+  { "nombre": "PODEMOS PERU" },
+  { "nombre": "PRIMERO LA GENTE - COMUNIDAD, ECOLOGÍA, LIBERTAD Y PROGRESO" },
+  { "nombre": "PROGRESEMOS" },
+  { "nombre": "RENOVACIÓN POPULAR" },
+  { "nombre": "SALVEMOS AL PERÚ" },
+  { "nombre": "UN CAMINO DIFERENTE" },
+  { "nombre": "UNIDAD NACIONAL" }
 ]
