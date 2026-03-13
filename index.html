@@ -54,6 +54,11 @@
       margin-top: 8px;
     }
 
+    .req {
+      color: #c41e32;
+      font-weight: bold;
+    }
+
     select,
     input[type="text"],
     input[type="email"],
@@ -214,7 +219,6 @@
     }
   </style>
 </head>
-
 <body>
   <h1>Registro para el módulo especializado de la web de resultados de las Elecciones Generales 2026</h1>
 
@@ -228,11 +232,11 @@
 
   <form id="formRegistro" novalidate>
     <fieldset id="parte1">
-      <legend>Parte 1. Validación de la institución o entidad</legend>
+      <legend>Validación de la institución o entidad</legend>
       <p class="subtitulo-parte">Primero validaremos si la institución o entidad ya cuenta con un registro previo.</p>
 
       <div class="campo" id="campoTipoInstitucion">
-        <label>Seleccione el tipo de institución o entidad que realiza el registro</label>
+        <label>Seleccione el tipo de institución o entidad que realiza el registro <span class="req">*</span></label>
         <div class="grupo-radios opciones-verticales">
           <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Instituciones y entidades públicas</label>
           <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
@@ -243,7 +247,7 @@
       </div>
 
       <div class="campo seccion-oculta" id="campoEntidadSeleccion">
-        <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción</label>
+        <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción <span class="req">*</span></label>
         <select id="entidadSeleccion">
           <option value="">-- Seleccione una opción --</option>
         </select>
@@ -251,13 +255,13 @@
       </div>
 
       <div class="campo seccion-oculta" id="campoRucInstitucion">
-        <label for="rucInstitucion">Ingrese el RUC de la institución o entidad</label>
+        <label for="rucInstitucion">Ingrese el RUC de la institución o entidad <span class="req">*</span></label>
         <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo seccion-oculta" id="campoPaisMision">
-        <label for="paisMision">Seleccione el país de la misión de observación</label>
+        <label for="paisMision">Seleccione el país de la misión de observación <span class="req">*</span></label>
         <select id="paisMision">
           <option value="">-- Seleccione un país --</option>
         </select>
@@ -268,10 +272,10 @@
     </fieldset>
 
     <fieldset id="parte2" class="seccion-oculta">
-      <legend>Parte 2. Datos de la persona responsable del registro</legend>
+      <legend>Datos de la persona a registrar</legend>
 
       <div class="campo" id="campoTipoDocumento">
-        <label for="tipoDocumento">Seleccione el tipo de documento de identidad</label>
+        <label for="tipoDocumento">Seleccione el tipo de documento de identidad <span class="req">*</span></label>
         <select id="tipoDocumento">
           <option value="">-- Seleccione el tipo de documento --</option>
           <option value="dni_cedula">DNI / Cédula de identidad</option>
@@ -281,37 +285,37 @@
       </div>
 
       <div class="campo" id="campoNumeroDocumento">
-        <label for="numeroDocumento">Ingrese el número de documento de identidad</label>
+        <label for="numeroDocumento">Ingrese el número de documento de identidad <span class="req">*</span></label>
         <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoNombreCompleto">
-        <label for="nombreCompleto">Ingrese sus nombres y apellidos</label>
+        <label for="nombreCompleto">Ingrese los nombres y apellidos de la persona a registrar <span class="req">*</span></label>
         <input id="nombreCompleto" type="text" maxlength="150" autocomplete="name" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoCelular">
-        <label for="celular">Ingrese el número de celular</label>
-        <input id="celular" type="text" inputmode="tel" maxlength="16" autocomplete="off" />
+        <label for="celular">Ingrese el número de celular <span class="req">*</span></label>
+        <input id="celular" type="text" inputmode="tel" maxlength="18" autocomplete="off" placeholder="+51 999999999" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoConfirmarCelular">
-        <label for="confirmarCelular">Confirme el número de celular</label>
-        <input id="confirmarCelular" type="text" inputmode="tel" maxlength="16" autocomplete="off" />
+        <label for="confirmarCelular">Confirme el número de celular <span class="req">*</span></label>
+        <input id="confirmarCelular" type="text" inputmode="tel" maxlength="18" autocomplete="off" placeholder="+51 999999999" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoCorreo">
-        <label for="correoElectronico">Ingrese el correo electrónico</label>
+        <label for="correoElectronico">Ingrese el correo electrónico <span class="req">*</span></label>
         <input id="correoElectronico" type="email" maxlength="150" autocomplete="off" />
         <div class="field-error"></div>
       </div>
 
       <div class="campo" id="campoConfirmarCorreo">
-        <label for="confirmarCorreoElectronico">Confirme el correo electrónico</label>
+        <label for="confirmarCorreoElectronico">Confirme el correo electrónico <span class="req">*</span></label>
         <input id="confirmarCorreoElectronico" type="email" maxlength="150" autocomplete="off" />
         <div class="field-error"></div>
       </div>
@@ -470,7 +474,7 @@
 
       [celular, confirmarCelular].forEach((input) => {
         input.addEventListener('input', () => {
-          input.value = sanitizarCelular(input.value).slice(0, 16);
+          input.value = sanitizarCelular(input.value).slice(0, 18);
           limpiarError(input.closest('.campo'));
         });
         bloquearPegado(input);
@@ -496,11 +500,21 @@
     function sanitizarCelular(valor) {
       const texto = String(valor || '');
       let out = '';
+      let tieneEspacio = false;
+
       for (let i = 0; i < texto.length; i++) {
         const ch = texto[i];
-        if (/\d/.test(ch)) out += ch;
-        else if (ch === '+' && out.length === 0) out += ch;
+
+        if (/\d/.test(ch)) {
+          out += ch;
+        } else if (ch === '+' && out.length === 0) {
+          out += ch;
+        } else if (ch === ' ' && out.startsWith('+') && !tieneEspacio) {
+          out += ch;
+          tieneEspacio = true;
+        }
       }
+
       return out;
     }
 
@@ -556,7 +570,7 @@
 
     function poblarEntidad(tipo) {
       const lista = state.catalogos[tipo] || [];
-      labelEntidadSeleccion.textContent = LABELS_ENTIDAD[tipo] || 'Seleccione una opción';
+      labelEntidadSeleccion.innerHTML = (LABELS_ENTIDAD[tipo] || 'Seleccione una opción') + ' <span class="req">*</span>';
 
       const valorActual = entidadSeleccion.value;
       entidadSeleccion.innerHTML = '';
@@ -611,7 +625,7 @@
     }
 
     function esCelularValido(valor) {
-      return /^\+?\d{9,15}$/.test(valor);
+      return /^\+\d{2,3}\s\d{6,15}$/.test(valor);
     }
 
     function normalizarClave(valor) {
@@ -730,15 +744,15 @@
       }
 
       if (!nombre) {
-        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos.' });
+        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona a registrar.' });
       } else if (nombre.length < 5) {
-        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese sus nombres y apellidos completos.' });
+        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos completos de la persona a registrar.' });
       }
 
       if (!cel) {
         errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular.' });
       } else if (!esCelularValido(cel)) {
-        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número válido. Puede incluir el código del país con +.' });
+        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número válido con código de país. Ejemplo: +51 999999999' });
       }
 
       if (!cel2) {
@@ -906,7 +920,7 @@
 
         state.pendingRequests.set(requestId, { resolve, reject, timeoutId });
         enviarPostOculto({ action, requestId, ...payload });
-      });x
+      });
     }
 
     function enviarPostOculto(data) {
