@@ -121,13 +121,6 @@
       padding: 28px 20px;
     }
     .pantalla-final h1 { margin-top: 0; }
-    .iframe-oculto {
-      width: 0;
-      height: 0;
-      border: 0;
-      visibility: hidden;
-      position: absolute;
-    }
     .subtitulo-parte {
       margin: 0 0 8px 0;
       color: var(--onpe-gris);
@@ -305,10 +298,8 @@
     <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
   </form>
 
-  <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
-
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbz6zlUGYmsGQCAAUz0NZTVy0wPIw7PIRR4CB_8rMMESGgTTqqZ1At00w1li6NORJbXx/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzwvh8sMx9aFMkAbLcwu4A-TF3ZbUqh_MUFKcdd7FkwTd6GAT2MTGFWwkdmUDcNB2bM/exec';
     const LISTAS_BASE_PATH = './';
 
     const JSON_FILES = {
@@ -340,7 +331,7 @@
       encuestadora_vigente: 'Encuestadoras vigentes'
     };
 
-    const state = { catalogos: {}, pendingRequests: new Map(), institucionValidada: false };
+    const state = { catalogos: {}, institucionValidada: false };
 
     const form = document.getElementById('formRegistro');
     const mensajeGlobal = document.getElementById('mensajeGlobal');
@@ -367,7 +358,6 @@
     const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
 
     window.addEventListener('load', inicializar);
-    window.addEventListener('message', manejarRespuestaIframe);
 
     async function inicializar() {
       try {
@@ -503,7 +493,9 @@
         entidadSeleccion.appendChild(option);
       });
 
-      if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) entidadSeleccion.value = valorActual;
+      if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) {
+        entidadSeleccion.value = valorActual;
+      }
     }
 
     function poblarPaises() {
@@ -663,13 +655,20 @@
         btnValidarInstitucion.disabled = true;
         mostrarMensajeGlobal('Validando si ya existe un registro...', 'info');
 
-        const resp = await postToAppsScript('checkInstitution', {
-          tipoInstitucion: tipo,
-          entidadNombre,
-          paisNombre
+        const resp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'checkInstitution',
+            tipoInstitucion: tipo,
+            entidadNombre,
+            paisNombre
+          })
         });
 
-        if (resp.status === 'duplicate') {
+        const data = await resp.json();
+
+        if (data.status === 'duplicate') {
           mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
           mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
           parte2.classList.add('seccion-oculta');
@@ -678,7 +677,9 @@
           return;
         }
 
-        if (resp.status !== 'available') throw new Error(resp.message || 'No se pudo validar el registro.');
+        if (data.status !== 'available') {
+          throw new Error(data.message || 'No se pudo validar el registro.');
+        }
 
         state.institucionValidada = true;
         parte2.classList.remove('seccion-oculta');
@@ -696,18 +697,62 @@
     function construirPayload() {
       const tipo = obtenerTipoInstitucionSeleccionado();
       return {
+        action: 'submitRegistration',
         tipoInstitucion: tipo,
         tipoInstitucionLabel: MAPA_TIPOS[tipo] || '',
         entidadNombre: valorLimpio(entidadSeleccion.value),
         paisNombre: valorLimpio(paisMision.value),
         ruc: soloDigitos(rucInstitucion.value),
         tipoDocumento: tipoDocumento.value,
-        tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex] ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent : '',
+        tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
+          ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent
+          : '',
         numeroDocumento: soloDigitos(numeroDocumento.value),
         nombreCompleto: valorLimpio(nombreCompleto.value),
         celular: telefonoCompuesto(codigoPais.value, celular.value),
         correoElectronico: normalizarCorreo(correoElectronico.value)
       };
+    }
+
+    function genId() {
+      return (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : (Date.now() + '-' + Math.random().toString(16).slice(2));
+    }
+
+    function sendOnce(payload) {
+      const body = JSON.stringify(payload);
+
+      if (navigator.sendBeacon) {
+        try {
+          const ok = navigator.sendBeacon(
+            API_URL,
+            new Blob([body], { type: 'text/plain;charset=utf-8' })
+          );
+          if (ok) return;
+        } catch (_) {}
+      }
+
+      try {
+        fetch(API_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body,
+          keepalive: true
+        });
+      } catch (_) {}
+    }
+
+    function sendWithInvisibleRetries(payload) {
+      const j1 = Math.floor(Math.random() * 600);
+      const j2 = Math.floor(Math.random() * 1200);
+
+      sendOnce(payload);
+      setTimeout(() => sendOnce(payload), 2000 + j1);
+      setTimeout(() => sendOnce(payload), 8000 + j2);
+
+      window.addEventListener('pagehide', () => sendOnce(payload), { once: true });
     }
 
     function mostrarPantallaFinalInmediata() {
@@ -716,11 +761,10 @@
           <h1 style="color:#003366;">Gracias por registrarte</h1>
           <p>Tu información se está enviando.</p>
         </div>
-        <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
       `;
     }
 
-    async function enviarFormulario(event) {
+    function enviarFormulario(event) {
       event.preventDefault();
 
       if (!state.institucionValidada) {
@@ -732,67 +776,19 @@
       const validacion2 = validarParte2('submit');
       if (!validacion2.valido) return;
 
-      if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbzcjZtq-Wz2ShbCGtKQ80VkcN0r3Jo428n6YCE7aNqDjEl542I6WTjRpGRlmxcMhxPs/exec') {
+      if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
         mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
         return;
       }
 
-      const payload = construirPayload();
+      const payload = {
+        submissionId: genId(),
+        sentAt: new Date().toISOString(),
+        ...construirPayload()
+      };
+
       mostrarPantallaFinalInmediata();
-      enviarPostOculto({ action: 'submitRegistration', requestId: `req_${Date.now()}`, ...payload });
-    }
-
-    function postToAppsScript(action, payload) {
-      return new Promise((resolve, reject) => {
-        const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-        const timeoutId = window.setTimeout(() => {
-          state.pendingRequests.delete(requestId);
-          reject(new Error('Tiempo de espera agotado.'));
-        }, 25000);
-        state.pendingRequests.set(requestId, { resolve, reject, timeoutId });
-        enviarPostOculto({ action, requestId, ...payload });
-      });
-    }
-
-    function enviarPostOculto(data) {
-      const targetFrame = document.getElementById('submitFrame') || (() => {
-        const iframe = document.createElement('iframe');
-        iframe.id = 'submitFrame';
-        iframe.name = 'submitFrame';
-        iframe.className = 'iframe-oculto';
-        document.body.appendChild(iframe);
-        return iframe;
-      })();
-
-      const tempForm = document.createElement('form');
-      tempForm.method = 'POST';
-      tempForm.action = API_URL;
-      tempForm.target = targetFrame.name;
-      tempForm.style.display = 'none';
-
-      Object.entries(data).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value == null ? '' : String(value);
-        tempForm.appendChild(input);
-      });
-
-      document.body.appendChild(tempForm);
-      tempForm.submit();
-      window.setTimeout(() => tempForm.remove(), 500);
-    }
-
-    function manejarRespuestaIframe(event) {
-      const data = event.data;
-      if (!data || data.source !== 'onpe-registro-webapp' || !data.requestId) return;
-
-      const pending = state.pendingRequests.get(data.requestId);
-      if (pending) {
-        clearTimeout(pending.timeoutId);
-        state.pendingRequests.delete(data.requestId);
-        pending.resolve(data);
-      }
+      sendWithInvisibleRetries(payload);
     }
   </script>
 </body>
