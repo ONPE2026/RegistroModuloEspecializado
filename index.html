@@ -15,7 +15,9 @@
       --onpe-gris: #4b5563;
       --rojo-req: #c41e32;
     }
+
     * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -25,13 +27,16 @@
       background-color: #f5f7fb;
       color: #1f2937;
     }
+
     h1 {
       margin-bottom: 5px;
       color: var(--onpe-azul);
       text-align: center;
       font-size: 1.8rem;
     }
+
     p { margin-top: 0.75rem; }
+
     fieldset {
       margin-top: 15px;
       padding: 15px;
@@ -39,15 +44,21 @@
       border: 1px solid var(--onpe-azul-claro);
       background-color: #ffffff;
     }
+
     legend {
       font-weight: bold;
       color: var(--onpe-azul);
     }
+
     label {
       display: block;
       margin-top: 8px;
     }
-    select, input[type="text"], input[type="email"], button {
+
+    select,
+    input[type="text"],
+    input[type="email"],
+    button {
       padding: 8px 10px;
       margin-top: 5px;
       min-width: 220px;
@@ -55,8 +66,11 @@
       border-radius: 4px;
       font-size: 0.98rem;
     }
+
     input[type="radio"] { margin-right: 6px; }
+
     .seccion-oculta { display: none; }
+
     .boton {
       margin-top: 20px;
       padding: 12px 18px;
@@ -67,23 +81,30 @@
       border: none;
       border-radius: 4px;
     }
+
     .boton:hover { opacity: 0.92; }
     .boton:disabled { opacity: 0.65; cursor: not-allowed; }
+
     .banner {
       max-width: 100%;
       height: auto;
       margin: 10px auto 20px auto;
       display: block;
     }
+
     .opciones-verticales label { display: block; margin-top: 6px; }
+
     .campo { margin-top: 12px; }
+
     .campo.tiene-error select,
     .campo.tiene-error input,
     .campo.tiene-error .grupo-radios,
     .campo.tiene-error .telefono-wrap {
       border-color: var(--onpe-borde-error);
     }
+
     .grupo-radios { margin-top: 6px; padding: 4px 0; }
+
     .field-error {
       display: none;
       margin-top: 6px;
@@ -93,7 +114,9 @@
       color: var(--onpe-texto-error);
       font-size: 0.93rem;
     }
+
     .field-error.activo { display: block; }
+
     .mensaje-global {
       display: none;
       margin-top: 16px;
@@ -101,21 +124,25 @@
       border-radius: 4px;
       font-weight: bold;
     }
+
     .mensaje-global.error {
       display: block;
       background: var(--onpe-fondo-error);
       color: var(--onpe-texto-error);
     }
+
     .mensaje-global.ok {
       display: block;
       background: #edf9f3;
       color: var(--onpe-verde);
     }
+
     .mensaje-global.info {
       display: block;
       background: #eef4ff;
       color: var(--onpe-azul);
     }
+
     .pantalla-final {
       max-width: 800px;
       margin: 40px auto;
@@ -126,7 +153,9 @@
       border-radius: 6px;
       padding: 28px 20px;
     }
+
     .pantalla-final h1 { margin-top: 0; }
+
     .iframe-oculto {
       width: 0;
       height: 0;
@@ -134,13 +163,23 @@
       visibility: hidden;
       position: absolute;
     }
+
     .subtitulo-parte {
       margin: 0 0 8px 0;
       color: var(--onpe-gris);
       font-size: 0.95rem;
     }
-    .req { color: var(--rojo-req); font-weight: bold; }
-    .texto-obligatorio { color: var(--rojo-req); font-weight: bold; }
+
+    .req {
+      color: var(--rojo-req);
+      font-weight: bold;
+    }
+
+    .texto-obligatorio {
+      color: var(--rojo-req);
+      font-weight: bold;
+    }
+
     .telefono-wrap {
       display: flex;
       align-items: center;
@@ -153,6 +192,7 @@
       width: fit-content;
       max-width: 100%;
     }
+
     .telefono-prefijo,
     .telefono-separador {
       font-size: 1.35rem;
@@ -161,8 +201,12 @@
       color: #4b5563;
       flex: 0 0 auto;
     }
+
     .telefono-codigo,
-    .telefono-numero { margin-top: 0 !important; }
+    .telefono-numero {
+      margin-top: 0 !important;
+    }
+
     .telefono-codigo {
       width: 64px !important;
       min-width: 64px !important;
@@ -170,26 +214,43 @@
       text-align: center;
       font-weight: bold;
     }
+
     .telefono-numero {
       width: 220px !important;
       min-width: 160px !important;
       max-width: 240px !important;
     }
+
     @media (max-width: 600px) {
       body { padding: 10px; font-size: 15px; }
       h1 { font-size: 1.45rem; }
       fieldset { padding: 12px; }
-      select, input[type="text"], input[type="email"], button { width: 100%; min-width: 0; }
-      .telefono-wrap { width: 100%; gap: 8px; padding: 10px; }
+
+      select,
+      input[type="text"],
+      input[type="email"],
+      button {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .telefono-wrap {
+        width: 100%;
+        gap: 8px;
+        padding: 10px;
+      }
+
       .telefono-prefijo,
       .telefono-separador {
         font-size: 1.2rem;
       }
+
       .telefono-codigo {
         width: 58px !important;
         min-width: 58px !important;
         max-width: 58px !important;
       }
+
       .telefono-numero {
         flex: 1 1 auto;
         width: auto !important;
@@ -201,12 +262,20 @@
 </head>
 <body>
   <h1>Registro para el módulo especializado de la web de resultados de las Elecciones Generales 2026</h1>
-  <img src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg" alt="Banner ONPE EG 2026" class="banner" />
+
+  <img
+    src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
+    alt="Banner ONPE EG 2026"
+    class="banner"
+  />
+
   <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
+
   <form id="formRegistro" novalidate>
     <fieldset id="parte1">
       <legend>Validación de la institución o entidad</legend>
       <p class="subtitulo-parte">Primero validaremos si la institución o entidad ya cuenta con un registro previo.</p>
+
       <div class="campo" id="campoTipoInstitucion">
         <label>Seleccione el tipo de institución o entidad que realiza el registro <span class="req">*</span></label>
         <div class="grupo-radios opciones-verticales">
@@ -217,25 +286,35 @@
         </div>
         <div class="field-error"></div>
       </div>
+
       <div class="campo seccion-oculta" id="campoEntidadSeleccion">
         <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción <span class="req">*</span></label>
-        <select id="entidadSeleccion"><option value="">-- Seleccione una opción --</option></select>
+        <select id="entidadSeleccion">
+          <option value="">-- Seleccione una opción --</option>
+        </select>
         <div class="field-error"></div>
       </div>
+
       <div class="campo seccion-oculta" id="campoRucInstitucion">
         <label for="rucInstitucion">Ingrese el RUC de la institución o entidad <span class="req">*</span></label>
         <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
         <div class="field-error"></div>
       </div>
+
       <div class="campo seccion-oculta" id="campoPaisMision">
         <label for="paisMision">Seleccione el país de la misión de observación <span class="req">*</span></label>
-        <select id="paisMision"><option value="">-- Seleccione un país --</option></select>
+        <select id="paisMision">
+          <option value="">-- Seleccione un país --</option>
+        </select>
         <div class="field-error"></div>
       </div>
+
       <button id="btnValidarInstitucion" type="button" class="boton">Validar registro</button>
     </fieldset>
+
     <fieldset id="parte2" class="seccion-oculta">
       <legend>Datos de la persona a registrar</legend>
+
       <div class="campo" id="campoTipoDocumento">
         <label for="tipoDocumento">Seleccione el tipo de documento de identidad <span class="req">*</span></label>
         <select id="tipoDocumento">
@@ -245,16 +324,19 @@
         </select>
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoNumeroDocumento">
         <label for="numeroDocumento">Ingrese el número de documento de identidad <span class="req">*</span></label>
         <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoNombreCompleto">
         <label for="nombreCompleto">Ingrese los nombres y apellidos de la persona a registrar <span class="req">*</span></label>
         <input id="nombreCompleto" type="text" maxlength="150" autocomplete="name" />
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoCelular">
         <label>Ingrese el número de celular <span class="req">*</span></label>
         <div class="telefono-wrap">
@@ -265,6 +347,7 @@
         </div>
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoConfirmarCelular">
         <label>Confirme el número de celular <span class="req">*</span></label>
         <div class="telefono-wrap">
@@ -275,24 +358,31 @@
         </div>
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoCorreo">
         <label for="correoElectronico">Ingrese el correo electrónico <span class="req">*</span></label>
         <input id="correoElectronico" type="email" maxlength="150" autocomplete="off" />
         <div class="field-error"></div>
       </div>
+
       <div class="campo" id="campoConfirmarCorreo">
         <label for="confirmarCorreoElectronico">Confirme el correo electrónico <span class="req">*</span></label>
         <input id="confirmarCorreoElectronico" type="email" maxlength="150" autocomplete="off" />
         <div class="field-error"></div>
       </div>
+
       <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
     </fieldset>
+
     <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
   </form>
+
   <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
+
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbz6zlUGYmsGQCAAUz0NZTVy0wPIw7PIRR4CB_8rMMESGgTTqqZ1At00w1li6NORJbXx/exec';
     const LISTAS_BASE_PATH = './';
+
     const JSON_FILES = {
       institucion_publica: 'instituciones_publicas.json',
       organizacion_politica: 'organizaciones_politicas.json',
@@ -300,33 +390,45 @@
       encuestadora_vigente: 'encuestadoras_vigentes.json',
       paises: 'paises.json'
     };
+
     const LABELS_ENTIDAD = {
       institucion_publica: 'Seleccione el nombre de la institución o entidad pública',
       organizacion_politica: 'Seleccione la organización política',
       mision_observacion: 'Seleccione la misión de observación',
       encuestadora_vigente: 'Seleccione la encuestadora vigente'
     };
+
     const PLACEHOLDERS_ENTIDAD = {
       institucion_publica: '-- Seleccione la institución o entidad pública --',
       organizacion_politica: '-- Seleccione la organización política --',
       mision_observacion: '-- Seleccione la misión de observación --',
       encuestadora_vigente: '-- Seleccione la encuestadora vigente --'
     };
+
     const MAPA_TIPOS = {
       institucion_publica: 'Instituciones y entidades públicas',
       organizacion_politica: 'Organización política',
       mision_observacion: 'Misión de observación',
       encuestadora_vigente: 'Encuestadoras vigentes'
     };
-    const state = { catalogos: {}, registradosPorTipo: {}, pendingRequests: new Map(), institucionValidada: false };
+
+    const state = {
+      catalogos: {},
+      registradosPorTipo: {},
+      pendingRequests: new Map(),
+      institucionValidada: false
+    };
+
     const form = document.getElementById('formRegistro');
     const mensajeGlobal = document.getElementById('mensajeGlobal');
     const parte2 = document.getElementById('parte2');
     const btnValidarInstitucion = document.getElementById('btnValidarInstitucion');
+
     const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
     const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
     const campoRucInstitucion = document.getElementById('campoRucInstitucion');
     const campoPaisMision = document.getElementById('campoPaisMision');
+
     const entidadSeleccion = document.getElementById('entidadSeleccion');
     const labelEntidadSeleccion = document.getElementById('labelEntidadSeleccion');
     const rucInstitucion = document.getElementById('rucInstitucion');
@@ -340,8 +442,10 @@
     const confirmarCelular = document.getElementById('confirmarCelular');
     const correoElectronico = document.getElementById('correoElectronico');
     const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
+
     window.addEventListener('load', inicializar);
     window.addEventListener('message', manejarRespuestaIframe);
+
     async function inicializar() {
       try {
         await cargarCatalogos();
@@ -352,16 +456,22 @@
         mostrarMensajeGlobal('Ocurrió un problema al cargar las listas del formulario. Revise las rutas de los archivos JSON.', 'error');
       }
     }
+
     async function cargarCatalogos() {
       const entries = Object.entries(JSON_FILES);
-      const resultados = await Promise.all(entries.map(async ([key, file]) => {
-        const response = await fetch(LISTAS_BASE_PATH + file, { cache: 'no-store' });
-        if (!response.ok) throw new Error('No se pudo cargar ' + file);
-        return [key, await response.json()];
-      }));
-      resultados.forEach(([key, data]) => { state.catalogos[key] = Array.isArray(data) ? data : []; });
+      const resultados = await Promise.all(
+        entries.map(async ([key, file]) => {
+          const response = await fetch(LISTAS_BASE_PATH + file, { cache: 'no-store' });
+          if (!response.ok) throw new Error('No se pudo cargar ' + file);
+          return [key, await response.json()];
+        })
+      );
+      resultados.forEach(([key, data]) => {
+        state.catalogos[key] = Array.isArray(data) ? data : [];
+      });
       poblarPaises();
     }
+
     function configurarEventos() {
       document.querySelectorAll('input[name="tipoInstitucion"]').forEach((radio) => {
         radio.addEventListener('change', async () => {
@@ -373,67 +483,131 @@
           if (tipo) await cargarRegistradosPorTipo(tipo);
         });
       });
-      entidadSeleccion.addEventListener('change', () => { resetValidacionInstitucion(); limpiarError(campoEntidadSeleccion); ocultarMensajeGlobal(); });
-      rucInstitucion.addEventListener('input', () => { rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11); resetValidacionInstitucion(); limpiarError(campoRucInstitucion); ocultarMensajeGlobal(); });
-      paisMision.addEventListener('change', () => { resetValidacionInstitucion(); limpiarError(campoPaisMision); ocultarMensajeGlobal(); });
+
+      entidadSeleccion.addEventListener('change', () => {
+        resetValidacionInstitucion();
+        limpiarError(campoEntidadSeleccion);
+        ocultarMensajeGlobal();
+      });
+
+      rucInstitucion.addEventListener('input', () => {
+        rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
+        resetValidacionInstitucion();
+        limpiarError(campoRucInstitucion);
+        ocultarMensajeGlobal();
+      });
+
+      paisMision.addEventListener('change', () => {
+        resetValidacionInstitucion();
+        limpiarError(campoPaisMision);
+        ocultarMensajeGlobal();
+      });
+
       tipoDocumento.addEventListener('change', () => limpiarError(document.getElementById('campoTipoDocumento')));
-      numeroDocumento.addEventListener('input', () => { numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15); limpiarError(document.getElementById('campoNumeroDocumento')); });
+
+      numeroDocumento.addEventListener('input', () => {
+        numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
+        limpiarError(document.getElementById('campoNumeroDocumento'));
+      });
+
       nombreCompleto.addEventListener('input', () => limpiarError(document.getElementById('campoNombreCompleto')));
+
       [codigoPais, codigoPaisConfirm, celular, confirmarCelular].forEach((input) => {
-        input.addEventListener('input', () => { input.value = soloDigitos(input.value).slice(0, input.maxLength || 15); limpiarError(input.closest('.campo')); });
+        input.addEventListener('input', () => {
+          input.value = soloDigitos(input.value).slice(0, Number(input.maxLength || 15));
+          limpiarError(input.closest('.campo'));
+        });
         bloquearPegado(input);
       });
+
       [correoElectronico, confirmarCorreoElectronico].forEach((input) => {
         input.addEventListener('input', () => limpiarError(input.closest('.campo')));
         bloquearPegado(input);
       });
+
       btnValidarInstitucion.addEventListener('click', validarInstitucionAntesDeContinuar);
       form.addEventListener('submit', enviarFormulario);
     }
-    function resetValidacionInstitucion() { state.institucionValidada = false; parte2.classList.add('seccion-oculta'); }
-    function bloquearPegado(input) { ['paste', 'drop'].forEach((eventName) => input.addEventListener(eventName, (event) => event.preventDefault())); }
+
+    function resetValidacionInstitucion() {
+      state.institucionValidada = false;
+      parte2.classList.add('seccion-oculta');
+    }
+
+    function bloquearPegado(input) {
+      ['paste', 'drop'].forEach((eventName) => {
+        input.addEventListener(eventName, (event) => event.preventDefault());
+      });
+    }
+
     async function cargarRegistradosPorTipo(tipo) {
       if (!tipo || state.registradosPorTipo[tipo]) return;
       try {
         mostrarMensajeGlobal('Cargando validaciones de registro...', 'info');
         const resp = await postToAppsScript('getRegisteredByType', { tipoInstitucion: tipo });
-        if (resp.status === 'success' && Array.isArray(resp.items)) { state.registradosPorTipo[tipo] = resp.items; ocultarMensajeGlobal(); }
-        else throw new Error(resp.message || 'No se pudo cargar el índice.');
+        if (resp.status === 'success' && Array.isArray(resp.items)) {
+          state.registradosPorTipo[tipo] = resp.items;
+          ocultarMensajeGlobal();
+        } else {
+          throw new Error(resp.message || 'No se pudo cargar el índice.');
+        }
       } catch (error) {
         console.error(error);
         mostrarMensajeGlobal('No se pudo cargar la validación de instituciones registradas.', 'error');
       }
     }
+
     function actualizarCamposCondicionales() {
       const tipo = obtenerTipoInstitucionSeleccionado();
       const mostrarEntidad = Boolean(tipo);
       const mostrarRuc = tipo === 'institucion_publica' || tipo === 'encuestadora_vigente';
       const mostrarPais = tipo === 'mision_observacion';
+
       toggleSeccion(campoEntidadSeleccion, mostrarEntidad);
       toggleSeccion(campoRucInstitucion, mostrarRuc);
       toggleSeccion(campoPaisMision, mostrarPais);
-      if (mostrarEntidad) poblarEntidad(tipo); else entidadSeleccion.innerHTML = '<option value="">-- Seleccione una opción --</option>';
-      if (!mostrarRuc) { rucInstitucion.value = ''; limpiarError(campoRucInstitucion); }
-      if (!mostrarPais) { paisMision.value = ''; limpiarError(campoPaisMision); }
+
+      if (mostrarEntidad) poblarEntidad(tipo);
+      else entidadSeleccion.innerHTML = '<option value="">-- Seleccione una opción --</option>';
+
+      if (!mostrarRuc) {
+        rucInstitucion.value = '';
+        limpiarError(campoRucInstitucion);
+      }
+
+      if (!mostrarPais) {
+        paisMision.value = '';
+        limpiarError(campoPaisMision);
+      }
     }
-    function toggleSeccion(elemento, visible) { elemento.classList.toggle('seccion-oculta', !visible); }
+
+    function toggleSeccion(elemento, visible) {
+      elemento.classList.toggle('seccion-oculta', !visible);
+    }
+
     function poblarEntidad(tipo) {
       const lista = state.catalogos[tipo] || [];
       labelEntidadSeleccion.innerHTML = (LABELS_ENTIDAD[tipo] || 'Seleccione una opción') + ' <span class="req">*</span>';
       const valorActual = entidadSeleccion.value;
       entidadSeleccion.innerHTML = '';
+
       const optionDefault = document.createElement('option');
       optionDefault.value = '';
       optionDefault.textContent = PLACEHOLDERS_ENTIDAD[tipo] || '-- Seleccione una opción --';
       entidadSeleccion.appendChild(optionDefault);
+
       lista.forEach((item) => {
         const option = document.createElement('option');
         option.value = item.nombre;
         option.textContent = item.nombre;
         entidadSeleccion.appendChild(option);
       });
-      if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) entidadSeleccion.value = valorActual;
+
+      if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) {
+        entidadSeleccion.value = valorActual;
+      }
     }
+
     function poblarPaises() {
       const lista = state.catalogos.paises || [];
       paisMision.innerHTML = '<option value="">-- Seleccione un país --</option>';
@@ -444,58 +618,108 @@
         paisMision.appendChild(option);
       });
     }
+
     function obtenerTipoInstitucionSeleccionado() {
       const checked = document.querySelector('input[name="tipoInstitucion"]:checked');
       return checked ? checked.value : '';
     }
+
     const soloDigitos = (valor) => String(valor || '').replace(/\D+/g, '');
     const valorLimpio = (valor) => String(valor || '').trim();
     const normalizarCorreo = (valor) => valorLimpio(valor).toLowerCase();
     const esCorreoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
+
     const telefonoCompuesto = (codigo, numero) => {
-      const c = soloDigitos(codigo), n = soloDigitos(numero);
+      const c = soloDigitos(codigo);
+      const n = soloDigitos(numero);
       return c && n ? `+${c} ${n}` : '';
     };
-    const esCelularValido = (codigo, numero) => /^\d{1,3}$/.test(soloDigitos(codigo)) && /^\d{6,15}$/.test(soloDigitos(numero));
-    const normalizarClave = (valor) => String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+
+    const esCelularValido = (codigo, numero) =>
+      /^\d{1,3}$/.test(soloDigitos(codigo)) && /^\d{6,15}$/.test(soloDigitos(numero));
+
+    const normalizarClave = (valor) =>
+      String(valor || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .trim();
+
     function mostrarError(campo, mensaje) {
       if (!campo) return;
       campo.classList.add('tiene-error');
       const errorBox = campo.querySelector('.field-error');
-      if (errorBox) { errorBox.textContent = mensaje; errorBox.classList.add('activo'); }
+      if (errorBox) {
+        errorBox.textContent = mensaje;
+        errorBox.classList.add('activo');
+      }
     }
+
     function limpiarError(campo) {
       if (!campo) return;
       campo.classList.remove('tiene-error');
       const errorBox = campo.querySelector('.field-error');
-      if (errorBox) { errorBox.textContent = ''; errorBox.classList.remove('activo'); }
+      if (errorBox) {
+        errorBox.textContent = '';
+        errorBox.classList.remove('activo');
+      }
     }
-    function limpiarErroresFormulario() { document.querySelectorAll('.campo').forEach((campo) => limpiarError(campo)); }
-    function mostrarMensajeGlobal(texto, tipo) { mensajeGlobal.textContent = texto; mensajeGlobal.className = 'mensaje-global ' + tipo; }
-    function ocultarMensajeGlobal() { mensajeGlobal.textContent = ''; mensajeGlobal.className = 'mensaje-global'; }
+
+    function limpiarErroresFormulario() {
+      document.querySelectorAll('.campo').forEach((campo) => limpiarError(campo));
+    }
+
+    function mostrarMensajeGlobal(texto, tipo) {
+      mensajeGlobal.textContent = texto;
+      mensajeGlobal.className = 'mensaje-global ' + tipo;
+    }
+
+    function ocultarMensajeGlobal() {
+      mensajeGlobal.textContent = '';
+      mensajeGlobal.className = 'mensaje-global';
+    }
+
     function validarParte1(modo = 'submit') {
       if (modo === 'submit') {
-        limpiarError(campoTipoInstitucion); limpiarError(campoEntidadSeleccion); limpiarError(campoRucInstitucion); limpiarError(campoPaisMision);
+        limpiarError(campoTipoInstitucion);
+        limpiarError(campoEntidadSeleccion);
+        limpiarError(campoRucInstitucion);
+        limpiarError(campoPaisMision);
       }
+
       const errores = [];
       const tipo = obtenerTipoInstitucionSeleccionado();
       const entidadNombre = valorLimpio(entidadSeleccion.value);
       const paisNombre = valorLimpio(paisMision.value);
       const ruc = soloDigitos(rucInstitucion.value);
+
       if (!tipo) errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
-      if (!campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
+
+      if (!campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) {
+        errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
+      }
+
       if (!campoRucInstitucion.classList.contains('seccion-oculta')) {
         if (!ruc) errores.push({ campo: campoRucInstitucion, mensaje: 'Ingrese el RUC de la institución o entidad.' });
-        else if (!/^\d{11}$/.test(ruc)) errores.push({ campo: campoRucInstitucion, mensaje: 'El RUC debe tener exactamente 11 dígitos.' });
+        else if (!/^\d{11}$/.test(ruc)) {
+          errores.push({ campo: campoRucInstitucion, mensaje: 'El RUC debe tener exactamente 11 dígitos.' });
+        }
       }
-      if (!campoPaisMision.classList.contains('seccion-oculta') && !paisNombre) errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
+
+      if (!campoPaisMision.classList.contains('seccion-oculta') && !paisNombre) {
+        errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
+      }
+
       if (modo === 'submit' && errores.length) {
         errores.forEach((error) => mostrarError(error.campo, error.mensaje));
         mostrarMensajeGlobal('Revise los campos resaltados antes de continuar.', 'error');
         errores[0].campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+
       return { valido: errores.length === 0, errores };
     }
+
     function validarParte2(modo = 'submit') {
       if (modo === 'submit') {
         limpiarError(document.getElementById('campoTipoDocumento'));
@@ -506,51 +730,94 @@
         limpiarError(document.getElementById('campoCorreo'));
         limpiarError(document.getElementById('campoConfirmarCorreo'));
       }
+
       const errores = [];
       const doc = soloDigitos(numeroDocumento.value);
       const nombre = valorLimpio(nombreCompleto.value);
-      const cod1 = soloDigitos(codigoPais.value), num1 = soloDigitos(celular.value);
-      const cod2 = soloDigitos(codigoPaisConfirm.value), num2 = soloDigitos(confirmarCelular.value);
-      const tel1 = telefonoCompuesto(cod1, num1), tel2 = telefonoCompuesto(cod2, num2);
-      const correo = normalizarCorreo(correoElectronico.value), correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
-      if (!tipoDocumento.value) errores.push({ campo: document.getElementById('campoTipoDocumento'), mensaje: 'Seleccione el tipo de documento de identidad.' });
-      if (!doc) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
-      else if (!/^\d{6,15}$/.test(doc)) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese solo números y una longitud entre 6 y 15 dígitos.' });
-      if (!nombre) errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona a registrar.' });
-      else if (nombre.length < 5) errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos completos de la persona a registrar.' });
-      if (!cod1 || !num1) errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular con código de país.' });
-      else if (!esCelularValido(cod1, num1)) errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número válido con código de país.' });
-      if (!cod2 || !num2) errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el número de celular con código de país.' });
-      else if (!esCelularValido(cod2, num2)) errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Ingrese una confirmación válida con código de país.' });
-      else if (tel1 !== tel2) errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
-      if (!correo) errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese el correo electrónico.' });
-      else if (!esCorreoValido(correo)) errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese un correo electrónico válido.' });
-      if (!correo2) errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'Confirme el correo electrónico.' });
-      else if (correo !== correo2) errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'El correo electrónico no coincide con la confirmación.' });
+      const cod1 = soloDigitos(codigoPais.value);
+      const num1 = soloDigitos(celular.value);
+      const cod2 = soloDigitos(codigoPaisConfirm.value);
+      const num2 = soloDigitos(confirmarCelular.value);
+      const tel1 = telefonoCompuesto(cod1, num1);
+      const tel2 = telefonoCompuesto(cod2, num2);
+      const correo = normalizarCorreo(correoElectronico.value);
+      const correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
+
+      if (!tipoDocumento.value) {
+        errores.push({ campo: document.getElementById('campoTipoDocumento'), mensaje: 'Seleccione el tipo de documento de identidad.' });
+      }
+
+      if (!doc) {
+        errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
+      } else if (!/^\d{6,15}$/.test(doc)) {
+        errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese solo números y una longitud entre 6 y 15 dígitos.' });
+      }
+
+      if (!nombre) {
+        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona a registrar.' });
+      } else if (nombre.length < 5) {
+        errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos completos de la persona a registrar.' });
+      }
+
+      if (!cod1 || !num1) {
+        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese el número de celular con código de país.' });
+      } else if (!esCelularValido(cod1, num1)) {
+        errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'Ingrese un número válido con código de país.' });
+      }
+
+      if (!cod2 || !num2) {
+        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Confirme el número de celular con código de país.' });
+      } else if (!esCelularValido(cod2, num2)) {
+        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Ingrese una confirmación válida con código de país.' });
+      } else if (tel1 !== tel2) {
+        errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
+      }
+
+      if (!correo) {
+        errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese el correo electrónico.' });
+      } else if (!esCorreoValido(correo)) {
+        errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese un correo electrónico válido.' });
+      }
+
+      if (!correo2) {
+        errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'Confirme el correo electrónico.' });
+      } else if (correo !== correo2) {
+        errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'El correo electrónico no coincide con la confirmación.' });
+      }
+
       if (modo === 'submit' && errores.length) {
         errores.forEach((error) => mostrarError(error.campo, error.mensaje));
         mostrarMensajeGlobal('Revise los campos resaltados antes de enviar el registro.', 'error');
         errores[0].campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+
       return { valido: errores.length === 0, errores };
     }
+
     async function validarInstitucionAntesDeContinuar() {
       ocultarMensajeGlobal();
       const validacion = validarParte1('submit');
       if (!validacion.valido) return;
+
       const tipo = obtenerTipoInstitucionSeleccionado();
       const entidadNombre = valorLimpio(entidadSeleccion.value);
       const paisNombre = valorLimpio(paisMision.value);
+
       try {
         btnValidarInstitucion.disabled = true;
+
         if (!state.registradosPorTipo[tipo]) await cargarRegistradosPorTipo(tipo);
+
         const items = state.registradosPorTipo[tipo] || [];
         const existe = items.some((item) => {
           const mismaEntidad = normalizarClave(item.entidadNombre) === normalizarClave(entidadNombre);
           if (!mismaEntidad) return false;
-          if (tipo === 'mision_observacion') return normalizarClave(item.paisNombre) === normalizarClave(paisNombre);
+          if (tipo === 'mision_observacion') {
+            return normalizarClave(item.paisNombre) === normalizarClave(paisNombre);
+          }
           return true;
         });
+
         if (existe) {
           mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
           mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
@@ -559,10 +826,12 @@
           campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
           return;
         }
+
         state.institucionValidada = true;
         parte2.classList.remove('seccion-oculta');
         mostrarMensajeGlobal('La institución o entidad no presenta un registro previo. Puede continuar.', 'ok');
         parte2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       } catch (error) {
         console.error(error);
         mostrarMensajeGlobal('No se pudo validar la institución o entidad. Intente nuevamente.', 'error');
@@ -570,6 +839,7 @@
         btnValidarInstitucion.disabled = false;
       }
     }
+
     function construirPayload() {
       const tipo = obtenerTipoInstitucionSeleccionado();
       return {
@@ -579,69 +849,113 @@
         paisNombre: valorLimpio(paisMision.value),
         ruc: soloDigitos(rucInstitucion.value),
         tipoDocumento: tipoDocumento.value,
-        tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex] ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent : '',
+        tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
+          ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent
+          : '',
         numeroDocumento: soloDigitos(numeroDocumento.value),
         nombreCompleto: valorLimpio(nombreCompleto.value),
         celular: telefonoCompuesto(codigoPais.value, celular.value),
         correoElectronico: normalizarCorreo(correoElectronico.value)
       };
     }
-    function mostrarPantallaFinalOptimista() {
-      document.body.innerHTML = `
-        <div class="pantalla-final">
-          <h1 style="color:#003366;">Registro completado</h1>
-          <p>Se está procesando el registro.</p>
-        </div>
-        <iframe id="submitFrame" name="submitFrame" class="iframe-oculto"></iframe>
-      `;
-    }
+
     async function enviarFormulario(event) {
       event.preventDefault();
+
       if (!state.institucionValidada) {
         mostrarMensajeGlobal('Primero debe validar la institución o entidad antes de continuar.', 'error');
         document.getElementById('parte1').scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
+
       const validacion2 = validarParte2('submit');
       if (!validacion2.valido) return;
+
       if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
         mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
         return;
       }
+
       const payload = construirPayload();
-      mostrarPantallaFinalOptimista();
+
       try {
-        enviarPostOculto({ action: 'submitRegistration', requestId: `req_${Date.now()}`, ...payload });
+        mostrarMensajeGlobal('Procesando registro...', 'info');
+
+        const respuesta = await postToAppsScript('submitRegistration', payload);
+
+        if (respuesta.status === 'success') {
+          document.body.innerHTML = `
+            <div class="pantalla-final">
+              <h1 style="color:#003366;">Registro completado</h1>
+              <p>Se ha realizado el registro correctamente.</p>
+            </div>
+          `;
+          return;
+        }
+
+        if (respuesta.status === 'duplicate') {
+          mostrarError(campoEntidadSeleccion, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
+          mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
+          parte2.classList.add('seccion-oculta');
+          state.institucionValidada = false;
+          campoEntidadSeleccion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        mostrarMensajeGlobal(respuesta.message || 'Ocurrió un error al registrar la información.', 'error');
+
       } catch (error) {
         console.error(error);
+        mostrarMensajeGlobal('No se pudo completar el registro. Revise la publicación de la Web App e intente nuevamente.', 'error');
       }
     }
+
     function postToAppsScript(action, payload) {
       return new Promise((resolve, reject) => {
         const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-        const timeoutId = window.setTimeout(() => { state.pendingRequests.delete(requestId); reject(new Error('Tiempo de espera agotado.')); }, 25000);
+        const timeoutId = window.setTimeout(() => {
+          state.pendingRequests.delete(requestId);
+          reject(new Error('Tiempo de espera agotado.'));
+        }, 25000);
+
         state.pendingRequests.set(requestId, { resolve, reject, timeoutId });
         enviarPostOculto({ action, requestId, ...payload });
       });
     }
+
     function enviarPostOculto(data) {
       const targetFrame = document.getElementById('submitFrame') || (() => {
         const iframe = document.createElement('iframe');
-        iframe.id = 'submitFrame'; iframe.name = 'submitFrame'; iframe.className = 'iframe-oculto'; document.body.appendChild(iframe); return iframe;
+        iframe.id = 'submitFrame';
+        iframe.name = 'submitFrame';
+        iframe.className = 'iframe-oculto';
+        document.body.appendChild(iframe);
+        return iframe;
       })();
+
       const tempForm = document.createElement('form');
-      tempForm.method = 'POST'; tempForm.action = API_URL; tempForm.target = targetFrame.name; tempForm.style.display = 'none';
+      tempForm.method = 'POST';
+      tempForm.action = API_URL;
+      tempForm.target = targetFrame.name;
+      tempForm.style.display = 'none';
+
       Object.entries(data).forEach(([key, value]) => {
         const input = document.createElement('input');
-        input.type = 'hidden'; input.name = key; input.value = value == null ? '' : String(value); tempForm.appendChild(input);
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value == null ? '' : String(value);
+        tempForm.appendChild(input);
       });
+
       document.body.appendChild(tempForm);
       tempForm.submit();
       window.setTimeout(() => tempForm.remove(), 500);
     }
+
     function manejarRespuestaIframe(event) {
       const data = event.data;
       if (!data || data.source !== 'onpe-registro-webapp' || !data.requestId) return;
+
       const pending = state.pendingRequests.get(data.requestId);
       if (pending) {
         clearTimeout(pending.timeoutId);
