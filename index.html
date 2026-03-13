@@ -843,7 +843,7 @@
       const validacion2 = validarParte2('submit');
       if (!validacion2.valido) return;
 
-      if (!API_URL || API_URL === 'PEGAR_AQUI_URL_WEB_APP') {
+      if (!API_URL || API_URL === 'https://script.google.com/macros/s/AKfycbz6zlUGYmsGQCAAUz0NZTVy0wPIw7PIRR4CB_8rMMESGgTTqqZ1At00w1li6NORJbXx/exec') {
         mostrarMensajeGlobal('Debe actualizar la constante API_URL con la URL de su Web App antes de publicar el formulario.', 'error');
         return;
       }
