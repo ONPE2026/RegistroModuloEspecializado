@@ -233,6 +233,11 @@
       font-size: 1rem;
     }
 
+    #pantallaEspera .pantalla-final {
+      max-width: 800px;
+      margin: 20px auto;
+    }
+
     @media (max-width: 600px) {
       body {
         padding: 10px;
@@ -277,153 +282,171 @@
   </style>
 </head>
 <body>
-  <img
-    src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
-    alt="Banner ONPE EG 2026"
-    class="banner"
-  />
+  <div id="pantallaEspera">
+    <img
+      src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
+      alt="Banner ONPE EG 2026"
+      class="banner"
+    />
 
-  <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
-
-  <form id="formRegistro" novalidate autocomplete="off">
-    <div style="display:none;">
-      <input type="text" name="fakeusernameremembered" autocomplete="username">
-      <input type="password" name="fakepasswordremembered" autocomplete="current-password">
+    <div class="pantalla-final">
+      <p style="font-size: 1.1rem; font-weight: bold; color: #003366;">
+        El registro se habilitará el martes 24 de marzo.
+      </p>
     </div>
+  </div>
 
-    <fieldset id="parte1">
-      <legend>Validación de la institución o entidad</legend>
-      <p class="subtitulo-parte">Primero validaremos si la institución o entidad ya cuenta con un registro previo.</p>
+  <div id="contenidoFormulario" class="seccion-oculta">
+    <h1>Registro para el módulo especializado de la web de resultados de las Elecciones Generales 2026</h1>
 
-      <div class="campo" id="campoTipoInstitucion">
-        <label>Seleccione el tipo de institución o entidad que realiza el registro <span class="req">*</span></label>
-        <div class="grupo-radios opciones-verticales">
-          <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
-          <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
-          <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
-          <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
+    <img
+      src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
+      alt="Banner ONPE EG 2026"
+      class="banner"
+    />
+
+    <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
+
+    <form id="formRegistro" novalidate autocomplete="off">
+      <div style="display:none;">
+        <input type="text" name="fakeusernameremembered" autocomplete="username">
+        <input type="password" name="fakepasswordremembered" autocomplete="current-password">
+      </div>
+
+      <fieldset id="parte1">
+        <legend>Validación de la institución o entidad</legend>
+        <p class="subtitulo-parte">Primero validaremos si la institución o entidad ya cuenta con un registro previo.</p>
+
+        <div class="campo" id="campoTipoInstitucion">
+          <label>Seleccione el tipo de institución o entidad que realiza el registro <span class="req">*</span></label>
+          <div class="grupo-radios opciones-verticales">
+            <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
+            <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
+            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
+            <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
+          </div>
+          <div class="field-error"></div>
         </div>
-        <div class="field-error"></div>
-      </div>
 
-      <div class="campo seccion-oculta" id="campoEntidadSeleccion">
-        <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción <span class="req">*</span></label>
-        <select id="entidadSeleccion">
-          <option value="">-- Seleccione una opción --</option>
-        </select>
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo seccion-oculta" id="campoRucInstitucion">
-        <label for="rucInstitucion">Ingrese el RUC de la institución o entidad <span class="req">*</span></label>
-        <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo seccion-oculta" id="campoRazonSocialAuto">
-        <label for="razonSocialAuto">Razón social <span class="req">*</span></label>
-        <input id="razonSocialAuto" type="text" readonly />
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo seccion-oculta" id="campoPaisMision">
-        <label for="paisMision">Seleccione el país de la misión de observación <span class="req">*</span></label>
-        <select id="paisMision">
-          <option value="">-- Seleccione un país --</option>
-        </select>
-        <div class="field-error"></div>
-      </div>
-
-      <button id="btnValidarInstitucion" type="button" class="boton">Validar registro</button>
-    </fieldset>
-
-    <fieldset id="parte2" class="seccion-oculta">
-      <legend>Datos de la persona a registrar</legend>
-
-      <div class="campo" id="campoTipoDocumento">
-        <label for="tipoDocumento">Seleccione el tipo de documento de identidad <span class="req">*</span></label>
-        <select id="tipoDocumento">
-          <option value="">-- Seleccione el tipo de documento --</option>
-          <option value="dni_cedula">DNI / Cédula de identidad</option>
-          <option value="carnet_extranjeria">Carnet de Extranjería</option>
-        </select>
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo" id="campoNumeroDocumento">
-        <label for="numeroDocumento">Ingrese el número de documento de identidad <span class="req">*</span></label>
-        <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo" id="campoNombreCompleto">
-        <label for="nombreCompleto">Ingrese los nombres y apellidos de la persona a registrar <span class="req">*</span></label>
-        <input id="nombreCompleto" type="text" maxlength="150" autocomplete="off" />
-        <div class="field-error"></div>
-      </div>
-
-      <div class="campo" id="campoCelular">
-        <label>Ingrese el número de celular <span class="req">*</span></label>
-        <div class="telefono-wrap">
-          <span class="telefono-prefijo">+</span>
-          <input id="codigoPais" class="telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" />
-          <span class="telefono-separador">|</span>
-          <input id="celular" class="telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+        <div class="campo seccion-oculta" id="campoEntidadSeleccion">
+          <label id="labelEntidadSeleccion" for="entidadSeleccion">Seleccione una opción <span class="req">*</span></label>
+          <select id="entidadSeleccion">
+            <option value="">-- Seleccione una opción --</option>
+          </select>
+          <div class="field-error"></div>
         </div>
-        <div class="field-error"></div>
-      </div>
 
-      <div class="campo" id="campoConfirmarCelular">
-        <label>Confirme el número de celular <span class="req">*</span></label>
-        <div class="telefono-wrap">
-          <span class="telefono-prefijo">+</span>
-          <input id="codigoPaisConfirm" class="telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" />
-          <span class="telefono-separador">|</span>
-          <input id="confirmarCelular" class="telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+        <div class="campo seccion-oculta" id="campoRucInstitucion">
+          <label for="rucInstitucion">Ingrese el RUC de la institución o entidad <span class="req">*</span></label>
+          <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
+          <div class="field-error"></div>
         </div>
-        <div class="field-error"></div>
-      </div>
 
-      <div class="campo" id="campoCorreo">
-        <label for="correoElectronico">Ingrese el correo electrónico <span class="req">*</span></label>
-        <input
-          id="correoElectronico"
-          name="correo_nuevo_onpe"
-          type="email"
-          maxlength="150"
-          autocomplete="off"
-          autocapitalize="off"
-          autocorrect="off"
-          spellcheck="false"
-          inputmode="email"
-        />
-        <div class="field-error"></div>
-      </div>
+        <div class="campo seccion-oculta" id="campoRazonSocialAuto">
+          <label for="razonSocialAuto">Razón social <span class="req">*</span></label>
+          <input id="razonSocialAuto" type="text" readonly />
+          <div class="field-error"></div>
+        </div>
 
-      <div class="campo" id="campoConfirmarCorreo">
-        <label for="confirmarCorreoElectronico">Confirme el correo electrónico <span class="req">*</span></label>
-        <input
-          id="confirmarCorreoElectronico"
-          name="confirmar_correo_nuevo_onpe"
-          type="email"
-          maxlength="150"
-          autocomplete="off"
-          autocapitalize="off"
-          autocorrect="off"
-          spellcheck="false"
-          inputmode="email"
-        />
-        <div class="field-error"></div>
-      </div>
+        <div class="campo seccion-oculta" id="campoPaisMision">
+          <label for="paisMision">Seleccione el país de la misión de observación <span class="req">*</span></label>
+          <select id="paisMision">
+            <option value="">-- Seleccione un país --</option>
+          </select>
+          <div class="field-error"></div>
+        </div>
 
-      <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
-    </fieldset>
+        <button id="btnValidarInstitucion" type="button" class="boton">Validar registro</button>
+      </fieldset>
 
-    <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
-  </form>
+      <fieldset id="parte2" class="seccion-oculta">
+        <legend>Datos de la persona a registrar</legend>
+
+        <div class="campo" id="campoTipoDocumento">
+          <label for="tipoDocumento">Seleccione el tipo de documento de identidad <span class="req">*</span></label>
+          <select id="tipoDocumento">
+            <option value="">-- Seleccione el tipo de documento --</option>
+            <option value="dni_cedula">DNI / Cédula de identidad</option>
+            <option value="carnet_extranjeria">Carnet de Extranjería</option>
+          </select>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoNumeroDocumento">
+          <label for="numeroDocumento">Ingrese el número de documento de identidad <span class="req">*</span></label>
+          <input id="numeroDocumento" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoNombreCompleto">
+          <label for="nombreCompleto">Ingrese los nombres y apellidos de la persona a registrar <span class="req">*</span></label>
+          <input id="nombreCompleto" type="text" maxlength="150" autocomplete="off" />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoCelular">
+          <label>Ingrese el número de celular <span class="req">*</span></label>
+          <div class="telefono-wrap">
+            <span class="telefono-prefijo">+</span>
+            <input id="codigoPais" class="telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" />
+            <span class="telefono-separador">|</span>
+            <input id="celular" class="telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoConfirmarCelular">
+          <label>Confirme el número de celular <span class="req">*</span></label>
+          <div class="telefono-wrap">
+            <span class="telefono-prefijo">+</span>
+            <input id="codigoPaisConfirm" class="telefono-codigo" type="text" inputmode="numeric" maxlength="3" autocomplete="off" />
+            <span class="telefono-separador">|</span>
+            <input id="confirmarCelular" class="telefono-numero" type="text" inputmode="numeric" maxlength="15" autocomplete="off" />
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoCorreo">
+          <label for="correoElectronico">Ingrese el correo electrónico <span class="req">*</span></label>
+          <input
+            id="correoElectronico"
+            name="correo_nuevo_onpe"
+            type="email"
+            maxlength="150"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            inputmode="email"
+          />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoConfirmarCorreo">
+          <label for="confirmarCorreoElectronico">Confirme el correo electrónico <span class="req">*</span></label>
+          <input
+            id="confirmarCorreoElectronico"
+            name="confirmar_correo_nuevo_onpe"
+            type="email"
+            maxlength="150"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            inputmode="email"
+          />
+          <div class="field-error"></div>
+        </div>
+
+        <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
+      </fieldset>
+
+      <div id="mensajeGlobal" class="mensaje-global" role="alert"></div>
+    </form>
+  </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzuXRpCwi2tQ4Sqa8aHGDLNwKHvH-Ir6_sGHoQUuNiArcIZwIwOyiJbdnF1LGOLqsn-/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx50KpdlF9MDmpAmANwPDq9uubk3ABCAajd52KMCCurNqBgPdlSNPWXTieee8LM0qA/exec';
     const LISTAS_BASE_PATH = './';
 
     const JSON_FILES = {
@@ -479,7 +502,25 @@
     const correoElectronico = document.getElementById('correoElectronico');
     const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
 
-    window.addEventListener('load', inicializar);
+    function formularioHabilitado() {
+      const ahora = new Date();
+      const fechaHabilitacion = new Date('2026-03-24T00:00:00-05:00');
+      return ahora >= fechaHabilitacion;
+    }
+
+    window.addEventListener('load', () => {
+      const pantallaEspera = document.getElementById('pantallaEspera');
+      const contenidoFormulario = document.getElementById('contenidoFormulario');
+
+      if (formularioHabilitado()) {
+        pantallaEspera.classList.add('seccion-oculta');
+        contenidoFormulario.classList.remove('seccion-oculta');
+        inicializar();
+      } else {
+        pantallaEspera.classList.remove('seccion-oculta');
+        contenidoFormulario.classList.add('seccion-oculta');
+      }
+    });
 
     async function inicializar() {
       try {
