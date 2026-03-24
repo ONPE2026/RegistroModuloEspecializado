@@ -233,6 +233,48 @@
       font-size: 1rem;
     }
 
+    .correo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 5px;
+      padding: 12px 14px;
+      border: 1px solid #c7d3e5;
+      border-radius: 8px;
+      background: #fff;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .correo-arroba {
+      font-size: 1.05rem;
+      line-height: 1;
+      font-weight: bold;
+      color: #4b5563;
+      flex: 0 0 auto;
+    }
+
+    .correo-usuario,
+    .correo-dominio {
+      margin-top: 0 !important;
+    }
+
+    .correo-usuario {
+      width: 160px !important;
+      min-width: 100px !important;
+      max-width: 200px !important;
+    }
+
+    .correo-dominio {
+      width: 200px !important;
+      min-width: 120px !important;
+      max-width: 260px !important;
+    }
+
+    .campo.tiene-error .correo-wrap {
+      border-color: var(--onpe-borde-error);
+    }
+
     #pantallaEspera .pantalla-final {
       max-width: 800px;
       margin: 20px auto;
@@ -273,6 +315,26 @@
       }
 
       .telefono-numero {
+        flex: 1 1 auto;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+      }
+
+      .correo-wrap {
+        width: 100%;
+        gap: 4px;
+        padding: 10px;
+      }
+
+      .correo-usuario {
+        flex: 1 1 auto;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+      }
+
+      .correo-dominio {
         flex: 1 1 auto;
         width: auto !important;
         min-width: 0 !important;
@@ -321,7 +383,7 @@
           <div class="grupo-radios opciones-verticales">
             <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
             <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
-            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
+            <label style="display:none;"><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
             <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
           </div>
           <div class="field-error"></div>
@@ -377,9 +439,15 @@
           <div class="field-error"></div>
         </div>
 
-        <div class="campo" id="campoNombreCompleto">
-          <label for="nombreCompleto">Ingrese los nombres y apellidos de la persona a registrar <span class="req">*</span></label>
-          <input id="nombreCompleto" type="text" maxlength="150" autocomplete="off" />
+        <div class="campo" id="campoNombres">
+          <label for="nombres">Ingrese los nombres de la persona a registrar <span class="req">*</span></label>
+          <input id="nombres" type="text" maxlength="80" autocomplete="off" />
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo" id="campoApellidos">
+          <label for="apellidos">Ingrese los apellidos de la persona a registrar <span class="req">*</span></label>
+          <input id="apellidos" type="text" maxlength="80" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
@@ -406,34 +474,22 @@
         </div>
 
         <div class="campo" id="campoCorreo">
-          <label for="correoElectronico">Ingrese el correo electrónico <span class="req">*</span></label>
-          <input
-            id="correoElectronico"
-            name="correo_nuevo_onpe"
-            type="email"
-            maxlength="150"
-            autocomplete="off"
-            autocapitalize="off"
-            autocorrect="off"
-            spellcheck="false"
-            inputmode="email"
-          />
+          <label>Ingrese el correo electrónico <span class="req">*</span></label>
+          <div class="correo-wrap">
+            <input id="correoUsuario" class="correo-usuario" type="text" maxlength="64" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="usuario" />
+            <span class="correo-arroba">@</span>
+            <input id="correoDominio" class="correo-dominio" type="text" maxlength="80" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="dominio.com" />
+          </div>
           <div class="field-error"></div>
         </div>
 
         <div class="campo" id="campoConfirmarCorreo">
-          <label for="confirmarCorreoElectronico">Confirme el correo electrónico <span class="req">*</span></label>
-          <input
-            id="confirmarCorreoElectronico"
-            name="confirmar_correo_nuevo_onpe"
-            type="email"
-            maxlength="150"
-            autocomplete="off"
-            autocapitalize="off"
-            autocorrect="off"
-            spellcheck="false"
-            inputmode="email"
-          />
+          <label>Confirme el correo electrónico <span class="req">*</span></label>
+          <div class="correo-wrap">
+            <input id="confirmarCorreoUsuario" class="correo-usuario" type="text" maxlength="64" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="usuario" />
+            <span class="correo-arroba">@</span>
+            <input id="confirmarCorreoDominio" class="correo-dominio" type="text" maxlength="80" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="dominio.com" />
+          </div>
           <div class="field-error"></div>
         </div>
 
@@ -493,13 +549,16 @@
     const paisMision = document.getElementById('paisMision');
     const tipoDocumento = document.getElementById('tipoDocumento');
     const numeroDocumento = document.getElementById('numeroDocumento');
-    const nombreCompleto = document.getElementById('nombreCompleto');
+    const nombres = document.getElementById('nombres');
+    const apellidos = document.getElementById('apellidos');
     const codigoPais = document.getElementById('codigoPais');
     const celular = document.getElementById('celular');
     const codigoPaisConfirm = document.getElementById('codigoPaisConfirm');
     const confirmarCelular = document.getElementById('confirmarCelular');
-    const correoElectronico = document.getElementById('correoElectronico');
-    const confirmarCorreoElectronico = document.getElementById('confirmarCorreoElectronico');
+    const correoUsuario = document.getElementById('correoUsuario');
+    const correoDominio = document.getElementById('correoDominio');
+    const confirmarCorreoUsuario = document.getElementById('confirmarCorreoUsuario');
+    const confirmarCorreoDominio = document.getElementById('confirmarCorreoDominio');
 
     function formularioHabilitado() {
       const ahora = new Date();
@@ -607,14 +666,20 @@
       tipoDocumento.addEventListener('change', () => limpiarError(document.getElementById('campoTipoDocumento')));
 
       numeroDocumento.addEventListener('input', () => {
-        numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
+        const tipo = obtenerTipoInstitucionSeleccionado();
+        if (tipo === 'mision_observacion') {
+          numeroDocumento.value = numeroDocumento.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 15).toUpperCase();
+        } else {
+          numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
+        }
         limpiarError(document.getElementById('campoNumeroDocumento'));
       });
 
-      [nombreCompleto].forEach((input) => {
+      [nombres, apellidos].forEach((input) => {
+        const campoId = input.id === 'nombres' ? 'campoNombres' : 'campoApellidos';
         input.addEventListener('input', () => {
           input.value = input.value.toUpperCase();
-          limpiarError(document.getElementById('campoNombreCompleto'));
+          limpiarError(document.getElementById(campoId));
         });
       });
 
@@ -626,7 +691,7 @@
         bloquearPegado(input);
       });
 
-      [correoElectronico, confirmarCorreoElectronico].forEach((input) => {
+      [correoUsuario, correoDominio, confirmarCorreoUsuario, confirmarCorreoDominio].forEach((input) => {
         input.addEventListener('input', () => {
           input.value = input.value.toUpperCase();
           limpiarError(input.closest('.campo'));
@@ -731,6 +796,13 @@
     const normalizarCorreo = (valor) => valorLimpio(valor).toLowerCase();
     const esCorreoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
 
+    function construirCorreo(usuario, dominio) {
+      const u = valorLimpio(usuario).toLowerCase();
+      const d = valorLimpio(dominio).toLowerCase();
+      if (u && d) return u + '@' + d;
+      return '';
+    }
+
     const telefonoCompuesto = (codigo, numero) => {
       const c = soloDigitos(codigo), n = soloDigitos(numero);
       return c && n ? `+${c} ${n}` : '';
@@ -826,7 +898,8 @@
       if (modo === 'submit') {
         limpiarError(document.getElementById('campoTipoDocumento'));
         limpiarError(document.getElementById('campoNumeroDocumento'));
-        limpiarError(document.getElementById('campoNombreCompleto'));
+        limpiarError(document.getElementById('campoNombres'));
+        limpiarError(document.getElementById('campoApellidos'));
         limpiarError(document.getElementById('campoCelular'));
         limpiarError(document.getElementById('campoConfirmarCelular'));
         limpiarError(document.getElementById('campoCorreo'));
@@ -834,19 +907,32 @@
       }
 
       const errores = [];
-      const doc = soloDigitos(numeroDocumento.value);
-      const nombre = valorLimpio(nombreCompleto.value).toUpperCase();
+      const tipo = obtenerTipoInstitucionSeleccionado();
+      const docVal = valorLimpio(numeroDocumento.value);
+      const nombresVal = valorLimpio(nombres.value).toUpperCase();
+      const apellidosVal = valorLimpio(apellidos.value).toUpperCase();
       const cod1 = soloDigitos(codigoPais.value), num1 = soloDigitos(celular.value);
       const cod2 = soloDigitos(codigoPaisConfirm.value), num2 = soloDigitos(confirmarCelular.value);
       const tel1 = telefonoCompuesto(cod1, num1), tel2 = telefonoCompuesto(cod2, num2);
-      const correo = normalizarCorreo(correoElectronico.value), correo2 = normalizarCorreo(confirmarCorreoElectronico.value);
+      const correo = construirCorreo(correoUsuario.value, correoDominio.value);
+      const correo2 = construirCorreo(confirmarCorreoUsuario.value, confirmarCorreoDominio.value);
 
       if (!tipoDocumento.value) errores.push({ campo: document.getElementById('campoTipoDocumento'), mensaje: 'Seleccione el tipo de documento de identidad.' });
-      if (!doc) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
-      else if (!/^\d{6,15}$/.test(doc)) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese solo números y una longitud entre 6 y 15 dígitos.' });
 
-      if (!nombre) errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos de la persona a registrar.' });
-      else if (nombre.length < 5) errores.push({ campo: document.getElementById('campoNombreCompleto'), mensaje: 'Ingrese los nombres y apellidos completos de la persona a registrar.' });
+      if (!docVal) {
+        errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
+      } else if (tipo === 'mision_observacion') {
+        if (!/^[a-zA-Z0-9]{6,15}$/.test(docVal)) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese entre 6 y 15 caracteres (letras y/o números).' });
+      } else {
+        const docDigitos = soloDigitos(docVal);
+        if (!/^\d{6,15}$/.test(docDigitos)) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese solo números y una longitud entre 6 y 15 dígitos.' });
+      }
+
+      if (!nombresVal) errores.push({ campo: document.getElementById('campoNombres'), mensaje: 'Ingrese los nombres de la persona a registrar.' });
+      else if (nombresVal.length < 2) errores.push({ campo: document.getElementById('campoNombres'), mensaje: 'Ingrese los nombres completos de la persona a registrar.' });
+
+      if (!apellidosVal) errores.push({ campo: document.getElementById('campoApellidos'), mensaje: 'Ingrese los apellidos de la persona a registrar.' });
+      else if (apellidosVal.length < 2) errores.push({ campo: document.getElementById('campoApellidos'), mensaje: 'Ingrese los apellidos completos de la persona a registrar.' });
 
       if (!cod1 || !num1) errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'El número debe tener por lo menos 6 dígitos sin considerar el código de país.' });
       else if (!esCelularValido(cod1, num1)) errores.push({ campo: document.getElementById('campoCelular'), mensaje: 'El número debe tener por lo menos 6 dígitos sin considerar el código de país' });
@@ -855,7 +941,7 @@
       else if (!esCelularValido(cod2, num2)) errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'Ingrese una confirmación válida' });
       else if (tel1 !== tel2) errores.push({ campo: document.getElementById('campoConfirmarCelular'), mensaje: 'El número de celular no coincide con la confirmación.' });
 
-      if (!correo) errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese el correo electrónico.' });
+      if (!correo) errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese el correo electrónico completo (usuario y dominio).' });
       else if (!esCorreoValido(correo)) errores.push({ campo: document.getElementById('campoCorreo'), mensaje: 'Ingrese un correo electrónico válido.' });
 
       if (!correo2) errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'Confirme el correo electrónico.' });
@@ -922,6 +1008,7 @@
 
     function construirPayload() {
       const tipo = obtenerTipoInstitucionSeleccionado();
+      const docVal = valorLimpio(numeroDocumento.value).toUpperCase();
       return {
         action: 'submitRegistration',
         tipoInstitucion: tipo,
@@ -933,10 +1020,12 @@
         tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
           ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent.toUpperCase()
           : '',
-        numeroDocumento: soloDigitos(numeroDocumento.value),
-        nombreCompleto: valorLimpio(nombreCompleto.value).toUpperCase(),
+        numeroDocumento: tipo === 'mision_observacion' ? docVal : soloDigitos(numeroDocumento.value),
+        nombres: valorLimpio(nombres.value).toUpperCase(),
+        apellidos: valorLimpio(apellidos.value).toUpperCase(),
+        nombreCompleto: valorLimpio(nombres.value).toUpperCase() + ' ' + valorLimpio(apellidos.value).toUpperCase(),
         celular: telefonoCompuesto(codigoPais.value, celular.value),
-        correoElectronico: normalizarCorreo(correoElectronico.value)
+        correoElectronico: construirCorreo(correoUsuario.value, correoDominio.value)
       };
     }
 
