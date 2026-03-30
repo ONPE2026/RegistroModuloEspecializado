@@ -1073,7 +1073,7 @@
     function mostrarPantallaFinalInmediata() {
       document.body.innerHTML = `
         <div class="pantalla-final">
-          <h1 style="color:#003366;">Gracias por registrarte</h1>
+          <h1 style="color:#003366;">Gracias por completar el formulario</h1>
           <p>Tu información se está enviando.</p>
         </div>
       `;
@@ -1106,5 +1106,28 @@
       sendWithInvisibleRetries(payload);
     }
   </script>
+
+  <div style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #003366;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    z-index: 9999;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+  ">
+    Para cualquier duda o consulta comuníquese a la línea gratuita:
+    <strong>0800-00513</strong> o al correo
+    <strong>informes4@onpe.gob.pe</strong>
+  </div>
+
+  <!-- Espaciado para que el footer fijo no tape contenido -->
+  <div style="height: 52px;"></div>
+
 </body>
 </html>
