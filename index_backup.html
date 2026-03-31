@@ -225,7 +225,9 @@
     }
 
     #campoRazonSocialAuto input,
-    #razonSocialAuto {
+    #razonSocialAuto,
+    #campoNombreMision input,
+    #nombreMision {
       width: 100%;
       min-width: 0;
       min-height: 52px;
@@ -383,7 +385,7 @@
           <div class="grupo-radios opciones-verticales">
             <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
             <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
-            <label style="display:none;"><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
+            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
             <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
           </div>
           <div class="field-error"></div>
@@ -394,6 +396,12 @@
           <select id="entidadSeleccion">
             <option value="">-- Seleccione una opción --</option>
           </select>
+          <div class="field-error"></div>
+        </div>
+
+        <div class="campo seccion-oculta" id="campoNombreMision">
+          <label for="nombreMision">Ingrese el nombre de la misión de observación <span class="req">*</span></label>
+          <input id="nombreMision" type="text" maxlength="150" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
@@ -501,27 +509,24 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbx50KpdlF9MDmpAmANwPDq9uubk3ABCAajd52KMCCurNqBgPdlSNPWXTieee8LM0qA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx8i924qy6RL8q6avR458SZM7ILCDXBUtxIZUGiJOxTVGPq65jMmjj-N_JH39WR6RRG/exec';
     const LISTAS_BASE_PATH = './';
 
     const JSON_FILES = {
       institucion_publica: 'instituciones_publicas.json',
       organizacion_politica: 'organizaciones_politicas.json',
-      mision_observacion: 'misiones_observacion.json',
       encuestadora_vigente: 'encuestadoras_vigentes.json',
       paises: 'paises.json'
     };
 
     const LABELS_ENTIDAD = {
       institucion_publica: 'Seleccione la entidad del Estado',
-      organizacion_politica: 'Seleccione la organización política',
-      mision_observacion: 'Seleccione la misión de observación'
+      organizacion_politica: 'Seleccione la organización política'
     };
 
     const PLACEHOLDERS_ENTIDAD = {
       institucion_publica: '-- Seleccione la entidad del Estado --',
-      organizacion_politica: '-- Seleccione la organización política --',
-      mision_observacion: '-- Seleccione la misión de observación --'
+      organizacion_politica: '-- Seleccione la organización política --'
     };
 
     const MAPA_TIPOS = {
@@ -539,11 +544,13 @@
     const btnValidarInstitucion = document.getElementById('btnValidarInstitucion');
     const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
     const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
+    const campoNombreMision = document.getElementById('campoNombreMision');
     const campoRucInstitucion = document.getElementById('campoRucInstitucion');
     const campoRazonSocialAuto = document.getElementById('campoRazonSocialAuto');
     const campoPaisMision = document.getElementById('campoPaisMision');
     const entidadSeleccion = document.getElementById('entidadSeleccion');
     const labelEntidadSeleccion = document.getElementById('labelEntidadSeleccion');
+    const nombreMision = document.getElementById('nombreMision');
     const rucInstitucion = document.getElementById('rucInstitucion');
     const razonSocialAuto = document.getElementById('razonSocialAuto');
     const paisMision = document.getElementById('paisMision');
@@ -636,6 +643,13 @@
         ocultarMensajeGlobal();
       });
 
+      nombreMision.addEventListener('input', () => {
+        nombreMision.value = nombreMision.value.toUpperCase();
+        resetValidacionInstitucion();
+        limpiarError(campoNombreMision);
+        ocultarMensajeGlobal();
+      });
+
       rucInstitucion.addEventListener('input', () => {
         rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
         resetValidacionInstitucion();
@@ -720,17 +734,31 @@
     function actualizarCamposCondicionales() {
       const tipo = obtenerTipoInstitucionSeleccionado();
       const esEncuestadora = tipo === 'encuestadora_vigente';
-      const mostrarEntidad = Boolean(tipo) && !esEncuestadora;
-      const mostrarRuc = tipo === 'encuestadora_vigente';
-      const mostrarPais = tipo === 'mision_observacion';
+      const esMision = tipo === 'mision_observacion';
+
+      const mostrarEntidad = Boolean(tipo) && !esEncuestadora && !esMision;
+      const mostrarNombreMision = esMision;
+      const mostrarRuc = esEncuestadora;
+      const mostrarPais = esMision;
 
       toggleSeccion(campoEntidadSeleccion, mostrarEntidad);
+      toggleSeccion(campoNombreMision, mostrarNombreMision);
       toggleSeccion(campoRucInstitucion, mostrarRuc);
       toggleSeccion(campoPaisMision, mostrarPais);
       toggleSeccion(campoRazonSocialAuto, false);
 
-      if (mostrarEntidad) poblarEntidad(tipo);
-      else entidadSeleccion.innerHTML = '<option value="">-- Seleccione una opción --</option>';
+      if (mostrarEntidad) {
+        poblarEntidad(tipo);
+      } else {
+        entidadSeleccion.innerHTML = '<option value="">-- Seleccione una opción --</option>';
+        entidadSeleccion.value = '';
+        limpiarError(campoEntidadSeleccion);
+      }
+
+      if (!mostrarNombreMision) {
+        nombreMision.value = '';
+        limpiarError(campoNombreMision);
+      }
 
       if (!mostrarRuc) {
         rucInstitucion.value = '';
@@ -793,7 +821,6 @@
 
     const soloDigitos = (valor) => String(valor || '').replace(/\D+/g, '');
     const valorLimpio = (valor) => String(valor || '').trim();
-    const normalizarCorreo = (valor) => valorLimpio(valor).toLowerCase();
     const esCorreoValido = (valor) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
 
     function construirCorreo(usuario, dominio) {
@@ -848,6 +875,7 @@
     function obtenerEntidadNombreActual() {
       const tipo = obtenerTipoInstitucionSeleccionado();
       if (tipo === 'encuestadora_vigente') return valorLimpio(razonSocialAuto.value).toUpperCase();
+      if (tipo === 'mision_observacion') return valorLimpio(nombreMision.value).toUpperCase();
       return valorLimpio(entidadSeleccion.value).toUpperCase();
     }
 
@@ -855,6 +883,7 @@
       if (modo === 'submit') {
         limpiarError(campoTipoInstitucion);
         limpiarError(campoEntidadSeleccion);
+        limpiarError(campoNombreMision);
         limpiarError(campoRucInstitucion);
         limpiarError(campoRazonSocialAuto);
         limpiarError(campoPaisMision);
@@ -868,7 +897,11 @@
 
       if (!tipo) errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
 
-      if (tipo !== 'encuestadora_vigente' && !campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) {
+      if (tipo === 'mision_observacion' && !entidadNombre) {
+        errores.push({ campo: campoNombreMision, mensaje: 'Ingrese el nombre de la misión de observación.' });
+      }
+
+      if (tipo !== 'encuestadora_vigente' && tipo !== 'mision_observacion' && !campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) {
         errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
       }
 
@@ -983,7 +1016,9 @@
         const data = await resp.json();
 
         if (data.status === 'duplicate') {
-          const targetCampo = tipo === 'encuestadora_vigente' ? campoRucInstitucion : campoEntidadSeleccion;
+          const targetCampo = tipo === 'encuestadora_vigente'
+            ? campoRucInstitucion
+            : (tipo === 'mision_observacion' ? campoNombreMision : campoEntidadSeleccion);
           mostrarError(targetCampo, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
           mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
           parte2.classList.add('seccion-oculta');
@@ -1126,7 +1161,6 @@
     <strong>informes4@onpe.gob.pe</strong>
   </div>
 
-  <!-- Espaciado para que el footer fijo no tape contenido -->
   <div style="height: 52px;"></div>
 
 </body>
