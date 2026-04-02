@@ -994,5 +994,13 @@
   {
     "codigo": "ZW",
     "nombre": "Zimbabue"
+  },
+{
+    "codigo": "OTRO",
+    "nombre": "Otros"
+  },
+{
+    "codigo": "NOAPLI",
+    "nombre": "No Aplica"
   }
 ]
