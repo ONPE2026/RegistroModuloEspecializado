@@ -571,17 +571,31 @@
     function formularioHabilitado() {
       const ahora = new Date();
       const fechaHabilitacion = new Date('2026-03-24T00:00:00-05:00');
-      return ahora >= fechaHabilitacion;
+      const fechaCierre = new Date('2026-04-04T00:00:00-05:00');
+      if (ahora >= fechaCierre) return 'cerrado';
+      if (ahora >= fechaHabilitacion) return 'abierto';
+      return 'pendiente';
     }
 
     window.addEventListener('load', () => {
       const pantallaEspera = document.getElementById('pantallaEspera');
       const contenidoFormulario = document.getElementById('contenidoFormulario');
+      const estado = formularioHabilitado();
 
-      if (formularioHabilitado()) {
+      if (estado === 'abierto') {
         pantallaEspera.classList.add('seccion-oculta');
         contenidoFormulario.classList.remove('seccion-oculta');
         inicializar();
+      } else if (estado === 'cerrado') {
+        pantallaEspera.classList.remove('seccion-oculta');
+        contenidoFormulario.classList.add('seccion-oculta');
+        pantallaEspera.innerHTML = `
+          <img src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg" alt="Banner ONPE EG 2026" class="banner" />
+          <div class="pantalla-final">
+            <h1 style="color:#003366;">Registro cerrado</h1>
+            <p style="font-size:1.05rem; color:#4b5563;">El plazo de registro para el módulo especializado ha concluido.<br>Ya no se aceptan nuevos registros.</p>
+          </div>
+        `;
       } else {
         pantallaEspera.classList.remove('seccion-oculta');
         contenidoFormulario.classList.add('seccion-oculta');
@@ -1060,7 +1074,7 @@
         nombres: valorLimpio(nombres.value).toUpperCase(),
         apellidos: valorLimpio(apellidos.value).toUpperCase(),
         nombreCompleto: valorLimpio(nombres.value).toUpperCase() + ' ' + valorLimpio(apellidos.value).toUpperCase(),
-        celular: telefonoCompuesto(codigoPais.value, celular.value),
+        celular: telefonoCompuesto(soloDigitos(codigoPais.value), soloDigitos(celular.value)),
         correoElectronico: construirCorreo(correoUsuario.value, correoDominio.value)
       };
     }
