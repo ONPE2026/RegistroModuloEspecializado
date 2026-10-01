@@ -657,6 +657,7 @@
 
     async function inicializar() {
       try {
+        precalentarServidor();
         await cargarCatalogos();
         configurarEventos();
         actualizarCamposCondicionales();
@@ -664,6 +665,12 @@
         console.error(error);
         mostrarMensajeGlobal('Ocurrió un problema al cargar las listas del formulario. Revise las rutas de los archivos JSON.', 'error');
       }
+    }
+
+    // Despierta el servidor de Apps Script apenas abre la página, para que la
+    // primera validación no pague el arranque en frío.
+    function precalentarServidor() {
+      try { fetch(API_URL, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {}); } catch (e) {}
     }
 
     async function cargarCatalogos() {
@@ -1080,13 +1087,14 @@
       return { valido: errores.length === 0, errores };
     }
 
-    // Llama al backend con tiempo máximo (20 s) y hasta 3 intentos, para que la
+    // Llama al backend con tiempo máximo (12 s) y hasta 3 intentos, para que la
     // validación no se quede colgada si Apps Script tarda o falla una vez.
-    async function consultarRegistroConReintentos(payload, intentos = 3, timeoutMs = 20000) {
+    async function consultarRegistroConReintentos(payload, intentos = 3, timeoutMs = 12000) {
       let ultimoError;
       for (let i = 1; i <= intentos; i++) {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
+        const t0 = performance.now();
         try {
           if (i > 1) mostrarMensajeGlobal('El servidor tardó en responder. Reintentando (' + i + '/' + intentos + ')...', 'info');
           const resp = await fetch(API_URL, {
@@ -1096,11 +1104,12 @@
             signal: controller.signal
           });
           const data = await resp.json();
+          console.info('[validación] intento ' + i + ' OK en ' + Math.round(performance.now() - t0) + ' ms', data);
           if (data.status === 'error') throw new Error(data.message || 'Error del servidor');
           return data;
         } catch (err) {
           ultimoError = err;
-          console.warn('Intento ' + i + ' falló:', err);
+          console.warn('[validación] intento ' + i + ' falló tras ' + Math.round(performance.now() - t0) + ' ms:', err && err.name, err && err.message);
         } finally {
           clearTimeout(timer);
         }
