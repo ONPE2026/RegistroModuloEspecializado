@@ -1,0 +1,137 @@
+[
+  {
+    "nombre": "MOVIMIENTO REGIONAL AMAZONENSE UNIDOS AL CAMPO",
+    "ambito": "AMAZONAS",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO REGIONAL VICTORIA AMAZONENSE",
+    "ambito": "AMAZONAS",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "SOCIOS POR ANCASH",
+    "ambito": "ÁNCASH",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "AREQUIPA, TRADICIÓN Y FUTURO",
+    "ambito": "AREQUIPA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "FUERZA AREQUIPEÑA",
+    "ambito": "AREQUIPA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO REGIONAL AREQUIPA AVANCEMOS",
+    "ambito": "AREQUIPA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "YO AREQUIPA",
+    "ambito": "AREQUIPA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "APP - TRABAJA AYACUCHO",
+    "ambito": "AYACUCHO",
+    "tipo": "ALIANZA ELECTORAL"
+  },
+  {
+    "nombre": "MOVIMIENTO POLITICO REGIONAL CAJAMARCA RENACE",
+    "ambito": "CAJAMARCA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "FRENTE REGIONAL TÚPAC",
+    "ambito": "CUSCO",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO INDEPENDIENTE REGIONAL HUÁNUCO PRIMERO",
+    "ambito": "HUÁNUCO",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO POLÍTICO UNIDOS POR EL DESARROLLO DE HUÁNUCO - UDH",
+    "ambito": "HUÁNUCO",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "ALIANZA RENOVACIÓN POPULAR Y TORO",
+    "ambito": "LIMA PROVINCIAS",
+    "tipo": "ALIANZA ELECTORAL"
+  },
+  {
+    "nombre": "APP - LA CHOLITA",
+    "ambito": "LIMA PROVINCIAS",
+    "tipo": "ALIANZA ELECTORAL"
+  },
+  {
+    "nombre": "CONCERTACIÓN PARA EL DESARROLLO REGIONAL - LIMA",
+    "ambito": "LIMA PROVINCIAS",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "ALIANZA LIBERTAD MADREDIOSENSE",
+    "ambito": "MADRE DE DIOS",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "KAUSACHUN",
+    "ambito": "MOQUEGUA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "VAMOS MOQUEGUA",
+    "ambito": "MOQUEGUA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO INDEPENDIENTE FUERZA REGIONAL",
+    "ambito": "PIURA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "ASI - JUNTOS POR EL PERÚ",
+    "ambito": "PUNO",
+    "tipo": "ALIANZA ELECTORAL"
+  },
+  {
+    "nombre": "PARTIDO DEMOCRÁTICO SOMOS PERÚ",
+    "ambito": "PUNO",
+    "tipo": "ALIANZA ELECTORAL"
+  },
+  {
+    "nombre": "VIVA PUNO",
+    "ambito": "PUNO",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "UNION REGIONAL",
+    "ambito": "SAN MARTÍN",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "MOVIMIENTO INDEPENDIENTE REGIONAL FUERZA TACNA",
+    "ambito": "TACNA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "NUEVA ESPERANZA",
+    "ambito": "TACNA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "UNIDOS POR TACNA",
+    "ambito": "TACNA",
+    "tipo": "MOVIMIENTO REGIONAL"
+  },
+  {
+    "nombre": "RENOVACION TUMBESINA",
+    "ambito": "TUMBES",
+    "tipo": "MOVIMIENTO REGIONAL"
+  }
+]

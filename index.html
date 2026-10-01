@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Registro para el módulo especializado - EG 2026</title>
+  <title>ERM2026 - Prerregistro Módulo Especializado</title>
   <style>
     :root {
       --onpe-azul: #003366;
@@ -58,6 +58,7 @@
     select,
     input[type="text"],
     input[type="email"],
+    input[type="file"],
     button {
       padding: 8px 10px;
       margin-top: 5px;
@@ -183,6 +184,39 @@
       font-weight: bold;
     }
 
+    .aviso-tratamiento-datos {
+      margin-top: 15px;
+      padding: 14px 16px;
+      border: 1px solid var(--onpe-borde-error);
+      border-radius: 6px;
+      background-color: var(--onpe-fondo-error);
+      color: var(--onpe-texto-error);
+    }
+
+    .aviso-tratamiento-datos p {
+      margin: 0 0 10px 0;
+      font-weight: bold;
+    }
+
+    .aviso-tratamiento-datos p:last-child {
+      margin-bottom: 0;
+    }
+
+    .boton-descarga-pdf {
+      display: inline-block;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      text-decoration: none;
+      background-color: var(--onpe-azul);
+      color: #ffffff;
+      border-radius: 4px;
+    }
+
+    .boton-descarga-pdf:hover {
+      opacity: 0.92;
+    }
+
     .telefono-wrap {
       display: flex;
       align-items: center;
@@ -294,6 +328,7 @@
       select,
       input[type="text"],
       input[type="email"],
+      input[type="file"],
       button {
         width: 100%;
         min-width: 0;
@@ -348,14 +383,14 @@
 <body>
   <div id="pantallaEspera">
     <img
-      src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
-      alt="Banner ONPE EG 2026"
+      src="banner.jpg"
+      alt="Banner ONPE ERM 2026"
       class="banner"
     />
 
     <div class="pantalla-final">
       <p style="font-size: 1.1rem; font-weight: bold; color: #003366;">
-        El registro se habilitará el martes 24 de marzo.
+        Cargando el formulario de prerregistro...
       </p>
     </div>
   </div>
@@ -363,12 +398,19 @@
   <div id="contenidoFormulario" class="seccion-oculta">
 
     <img
-      src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg"
-      alt="Banner ONPE EG 2026"
+      src="banner.jpg"
+      alt="Banner ONPE ERM 2026"
       class="banner"
     />
 
     <p class="texto-obligatorio">Todas las preguntas son obligatorias.</p>
+
+    <div class="aviso-tratamiento-datos">
+      <p>Para poder continuar con su registro debe descargar el siguiente documento y firmarlo. Al final de este formulario se le pedirá adjuntar el PDF firmado: sin el documento de autorización de tratamiento de datos personales firmado no se podrá completar su registro.</p>
+      <a class="boton-descarga-pdf" href="tratamiento_datos.pdf" target="_blank" rel="noopener" download>
+        Descargar documento de tratamiento de datos personales (PDF)
+      </a>
+    </div>
 
     <form id="formRegistro" novalidate autocomplete="off">
       <div style="display:none;">
@@ -384,7 +426,8 @@
           <label>Seleccione el tipo de institución o entidad que realiza el registro <span class="req">*</span></label>
           <div class="grupo-radios opciones-verticales">
             <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
-            <label><input type="radio" name="tipoInstitucion" value="organizacion_politica" /> Organización política</label>
+            <label><input type="radio" name="tipoInstitucion" value="partido_nacional" /> Partidos nacionales</label>
+            <label><input type="radio" name="tipoInstitucion" value="movimiento_regional" /> Movimientos regionales</label>
             <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
             <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
           </div>
@@ -502,6 +545,12 @@
           <div class="field-error"></div>
         </div>
 
+        <div class="campo" id="campoDocumentoFirmado">
+          <label for="documentoFirmado">Adjunte el documento de tratamiento de datos personales firmado (PDF o imagen: JPG, PNG) <span class="req">*</span></label>
+          <input id="documentoFirmado" type="file" accept="application/pdf,.pdf,image/jpeg,image/png,.jpg,.jpeg,.png" />
+          <div class="field-error"></div>
+        </div>
+
         <button id="btnEnviar" type="submit" class="boton">Enviar registro</button>
       </fieldset>
 
@@ -510,29 +559,34 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbx8i924qy6RL8q6avR458SZM7ILCDXBUtxIZUGiJOxTVGPq65jMmjj-N_JH39WR6RRG/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxroBuEewmoml19bRnt1Uu_mWMFm4v1C39oMouPJsdpT39CbEuaE9WL3QCy64ifsjEEpA/exec';
+    const TAMANO_MAX_PDF_BYTES = 8 * 1024 * 1024; // 8 MB (aplica a PDF o imagen adjunta)
     const LISTAS_BASE_PATH = './';
 
     const JSON_FILES = {
       institucion_publica: 'instituciones_publicas.json',
-      organizacion_politica: 'organizaciones_politicas.json',
+      partido_nacional: 'partidos_nacionales.json',
+      movimiento_regional: 'movimientos_regionales.json',
       encuestadora_vigente: 'encuestadoras_vigentes.json',
       paises: 'paises.json'
     };
 
     const LABELS_ENTIDAD = {
       institucion_publica: 'Seleccione la entidad del Estado',
-      organizacion_politica: 'Seleccione la organización política'
+      partido_nacional: 'Seleccione el partido político o alianza nacional',
+      movimiento_regional: 'Seleccione el movimiento o alianza regional'
     };
 
     const PLACEHOLDERS_ENTIDAD = {
       institucion_publica: '-- Seleccione la entidad del Estado --',
-      organizacion_politica: '-- Seleccione la organización política --'
+      partido_nacional: '-- Seleccione el partido político o alianza nacional --',
+      movimiento_regional: '-- Seleccione el movimiento o alianza regional --'
     };
 
     const MAPA_TIPOS = {
       institucion_publica: 'ENTIDAD DEL ESTADO',
-      organizacion_politica: 'ORGANIZACIÓN POLÍTICA',
+      partido_nacional: 'PARTIDO NACIONAL',
+      movimiento_regional: 'MOVIMIENTO REGIONAL',
       mision_observacion: 'MISIÓN DE OBSERVACIÓN',
       encuestadora_vigente: 'ENCUESTADORAS VIGENTES'
     };
@@ -567,14 +621,16 @@
     const correoDominio = document.getElementById('correoDominio');
     const confirmarCorreoUsuario = document.getElementById('confirmarCorreoUsuario');
     const confirmarCorreoDominio = document.getElementById('confirmarCorreoDominio');
+    const documentoFirmado = document.getElementById('documentoFirmado');
+    const btnEnviar = document.getElementById('btnEnviar');
 
     function formularioHabilitado() {
+      // ERM2026: sin fecha de apertura (el registro esta disponible desde ya).
+      // Fecha limite de registro: 4 de octubre de 2026 (hasta las 23:59, hora de Peru).
       const ahora = new Date();
-      const fechaHabilitacion = new Date('2026-03-24T00:00:00-05:00');
-      const fechaCierre = new Date('2026-04-04T00:00:00-05:00');
+      const fechaCierre = new Date('2026-10-05T00:00:00-05:00');
       if (ahora >= fechaCierre) return 'cerrado';
-      if (ahora >= fechaHabilitacion) return 'abierto';
-      return 'pendiente';
+      return 'abierto';
     }
 
     window.addEventListener('load', () => {
@@ -586,19 +642,16 @@
         pantallaEspera.classList.add('seccion-oculta');
         contenidoFormulario.classList.remove('seccion-oculta');
         inicializar();
-      } else if (estado === 'cerrado') {
+      } else {
         pantallaEspera.classList.remove('seccion-oculta');
         contenidoFormulario.classList.add('seccion-oculta');
         pantallaEspera.innerHTML = `
-          <img src="https://onpe2026.github.io/RegistroModuloEspecializado/banner.jpg" alt="Banner ONPE EG 2026" class="banner" />
+          <img src="banner.jpg" alt="Banner ONPE ERM 2026" class="banner" />
           <div class="pantalla-final">
             <h1 style="color:#003366;">Registro cerrado</h1>
             <p style="font-size:1.05rem; color:#4b5563;">El plazo de registro para el módulo especializado ha concluido.<br>Ya no se aceptan nuevos registros.</p>
           </div>
         `;
-      } else {
-        pantallaEspera.classList.remove('seccion-oculta');
-        contenidoFormulario.classList.add('seccion-oculta');
       }
     });
 
@@ -695,13 +748,17 @@
       tipoDocumento.addEventListener('change', () => limpiarError(document.getElementById('campoTipoDocumento')));
 
       numeroDocumento.addEventListener('input', () => {
-        const tipo = obtenerTipoInstitucionSeleccionado();
-        if (tipo === 'mision_observacion') {
+        if (tipoDocumento.value && tipoDocumento.value !== 'dni_cedula') {
           numeroDocumento.value = numeroDocumento.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 15).toUpperCase();
         } else {
           numeroDocumento.value = soloDigitos(numeroDocumento.value).slice(0, 15);
         }
         limpiarError(document.getElementById('campoNumeroDocumento'));
+      });
+
+      tipoDocumento.addEventListener('change', () => {
+        numeroDocumento.setAttribute('inputmode', tipoDocumento.value && tipoDocumento.value !== 'dni_cedula' ? 'text' : 'numeric');
+        numeroDocumento.dispatchEvent(new Event('input'));
       });
 
       [nombres, apellidos].forEach((input) => {
@@ -726,6 +783,10 @@
           limpiarError(input.closest('.campo'));
         });
         bloquearPegado(input);
+      });
+
+      documentoFirmado.addEventListener('change', () => {
+        limpiarError(document.getElementById('campoDocumentoFirmado'));
       });
 
       btnValidarInstitucion.addEventListener('click', validarInstitucionAntesDeContinuar);
@@ -952,6 +1013,7 @@
         limpiarError(document.getElementById('campoConfirmarCelular'));
         limpiarError(document.getElementById('campoCorreo'));
         limpiarError(document.getElementById('campoConfirmarCorreo'));
+        limpiarError(document.getElementById('campoDocumentoFirmado'));
       }
 
       const errores = [];
@@ -969,7 +1031,7 @@
 
       if (!docVal) {
         errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese el número de documento de identidad.' });
-      } else if (tipo === 'mision_observacion') {
+      } else if (tipoDocumento.value && tipoDocumento.value !== 'dni_cedula') {
         if (!/^[a-zA-Z0-9]{6,15}$/.test(docVal)) errores.push({ campo: document.getElementById('campoNumeroDocumento'), mensaje: 'Ingrese entre 6 y 15 caracteres (letras y/o números).' });
       } else {
         const docDigitos = soloDigitos(docVal);
@@ -995,6 +1057,20 @@
       if (!correo2) errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'Confirme el correo electrónico.' });
       else if (correo !== correo2) errores.push({ campo: document.getElementById('campoConfirmarCorreo'), mensaje: 'El correo electrónico no coincide con la confirmación.' });
 
+      const archivoAdjunto = documentoFirmado.files[0];
+      if (!archivoAdjunto) {
+        errores.push({ campo: document.getElementById('campoDocumentoFirmado'), mensaje: 'Adjunte el documento de tratamiento de datos personales firmado (PDF o imagen).' });
+      } else {
+        const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png'];
+        const extensionesPermitidas = /\.(pdf|jpe?g|png)$/i;
+        const esValido = tiposPermitidos.indexOf(archivoAdjunto.type) !== -1 || extensionesPermitidas.test(archivoAdjunto.name);
+        if (!esValido) {
+          errores.push({ campo: document.getElementById('campoDocumentoFirmado'), mensaje: 'El archivo debe ser un PDF, JPG o PNG.' });
+        } else if (archivoAdjunto.size > TAMANO_MAX_PDF_BYTES) {
+          errores.push({ campo: document.getElementById('campoDocumentoFirmado'), mensaje: 'El archivo no debe superar los 8 MB.' });
+        }
+      }
+
       if (modo === 'submit' && errores.length) {
         errores.forEach((error) => mostrarError(error.campo, error.mensaje));
         mostrarMensajeGlobal('Revise los campos resaltados antes de enviar el registro.', 'error');
@@ -1002,6 +1078,34 @@
       }
 
       return { valido: errores.length === 0, errores };
+    }
+
+    // Llama al backend con tiempo máximo (20 s) y hasta 3 intentos, para que la
+    // validación no se quede colgada si Apps Script tarda o falla una vez.
+    async function consultarRegistroConReintentos(payload, intentos = 3, timeoutMs = 20000) {
+      let ultimoError;
+      for (let i = 1; i <= intentos; i++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          if (i > 1) mostrarMensajeGlobal('El servidor tardó en responder. Reintentando (' + i + '/' + intentos + ')...', 'info');
+          const resp = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+          const data = await resp.json();
+          if (data.status === 'error') throw new Error(data.message || 'Error del servidor');
+          return data;
+        } catch (err) {
+          ultimoError = err;
+          console.warn('Intento ' + i + ' falló:', err);
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      throw ultimoError;
     }
 
     async function validarInstitucionAntesDeContinuar() {
@@ -1017,18 +1121,12 @@
         btnValidarInstitucion.disabled = true;
         mostrarMensajeGlobal('Validando si ya existe un registro...', 'info');
 
-        const resp = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'checkInstitution',
-            tipoInstitucion: tipo,
-            entidadNombre,
-            paisNombre
-          })
+        const data = await consultarRegistroConReintentos({
+          action: 'checkInstitution',
+          tipoInstitucion: tipo,
+          entidadNombre,
+          paisNombre
         });
-
-        const data = await resp.json();
 
         if (data.status === 'duplicate') {
           const targetCampo = tipo === 'encuestadora_vigente'
@@ -1070,7 +1168,7 @@
         tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
           ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent.toUpperCase()
           : '',
-        numeroDocumento: tipo === 'mision_observacion' ? docVal : soloDigitos(numeroDocumento.value),
+        numeroDocumento: (tipoDocumento.value && tipoDocumento.value !== 'dni_cedula') ? docVal : soloDigitos(numeroDocumento.value),
         nombres: valorLimpio(nombres.value).toUpperCase(),
         apellidos: valorLimpio(apellidos.value).toUpperCase(),
         nombreCompleto: valorLimpio(nombres.value).toUpperCase() + ' ' + valorLimpio(apellidos.value).toUpperCase(),
@@ -1085,51 +1183,29 @@
         : (Date.now() + '-' + Math.random().toString(16).slice(2));
     }
 
-    function sendOnce(payload) {
-      const body = JSON.stringify(payload);
-
-      if (navigator.sendBeacon) {
-        try {
-          const ok = navigator.sendBeacon(
-            API_URL,
-            new Blob([body], { type: 'text/plain;charset=utf-8' })
-          );
-          if (ok) return;
-        } catch (_) {}
-      }
-
-      try {
-        fetch(API_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body,
-          keepalive: true
-        });
-      } catch (_) {}
+    function leerArchivoComoBase64(archivo) {
+      return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+        lector.onload = () => {
+          const resultado = String(lector.result || '');
+          const base64 = resultado.substring(resultado.indexOf(',') + 1);
+          resolve(base64);
+        };
+        lector.onerror = () => reject(lector.error || new Error('No se pudo leer el archivo adjunto.'));
+        lector.readAsDataURL(archivo);
+      });
     }
 
-    function sendWithInvisibleRetries(payload) {
-      const j1 = Math.floor(Math.random() * 600);
-      const j2 = Math.floor(Math.random() * 1200);
-
-      sendOnce(payload);
-      setTimeout(() => sendOnce(payload), 2000 + j1);
-      setTimeout(() => sendOnce(payload), 8000 + j2);
-
-      window.addEventListener('pagehide', () => sendOnce(payload), { once: true });
-    }
-
-    function mostrarPantallaFinalInmediata() {
+    function mostrarPantallaFinal() {
       document.body.innerHTML = `
         <div class="pantalla-final">
           <h1 style="color:#003366;">Gracias por completar el formulario</h1>
-          <p>Tu información se está enviando.</p>
+          <p>Su información y el documento adjunto fueron registrados correctamente.</p>
         </div>
       `;
     }
 
-    function enviarFormulario(event) {
+    async function enviarFormulario(event) {
       event.preventDefault();
 
       if (!state.institucionValidada) {
@@ -1146,33 +1222,60 @@
         return;
       }
 
-      const payload = {
-        submissionId: genId(),
-        sentAt: new Date().toISOString(),
-        ...construirPayload()
-      };
+      const archivo = documentoFirmado.files[0];
 
-      mostrarPantallaFinalInmediata();
-      sendWithInvisibleRetries(payload);
+      try {
+        btnEnviar.disabled = true;
+        mostrarMensajeGlobal('Enviando su registro, no cierre ni recargue esta ventana...', 'info');
+
+        const archivoBase64 = await leerArchivoComoBase64(archivo);
+
+        const payload = {
+          submissionId: genId(),
+          sentAt: new Date().toISOString(),
+          archivoBase64,
+          archivoNombre: archivo.name,
+          archivoTipo: archivo.type || 'application/octet-stream',
+          ...construirPayload()
+        };
+
+        const resp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await resp.json();
+
+        if (data.status !== 'ok') throw new Error(data.message || 'No se pudo completar el registro.');
+
+        mostrarPantallaFinal();
+      } catch (error) {
+        console.error(error);
+        mostrarMensajeGlobal('No se pudo enviar su registro. Verifique su conexión e intente nuevamente.', 'error');
+        btnEnviar.disabled = false;
+      }
     }
   </script>
 
   <div style="
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    position: static;
     width: 100%;
     background-color: #003366;
     color: #ffffff;
     text-align: center;
-    padding: 10px 16px;
+    padding: 16px;
     font-family: Arial, sans-serif;
     font-size: 0.92rem;
-    z-index: 9999;
     box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    margin-top: 24px;
   ">
     <strong>Los datos registrados en el presente formulario serán utilizados únicamente para el proceso de registro en el módulo especializado de la web de resultados.</strong>
     <br>
-    Para cualquier duda o consulta comuníquese a la línea gratuita:
-    <strong>0800-00513</strong> o al correo
-    <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a9c0c7cfc6dbc4ccda9de
+    Para cualquier duda o consulta comuníquese a Fono ONPE:
+    <strong>(01) 4170630</strong> o al correo
+    <strong><a href="mailto:informes4@onpe.gob.pe" style="color:#ffffff;">informes4@onpe.gob.pe</a></strong>
+    <br>
+  </div>
+</body>
+</html>

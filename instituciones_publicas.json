@@ -1,18 +1,22 @@
 [
   {
     "id": "ip_demo_01",
-    "nombre": "DEFENSORÍA DEL PUEBLO"
-  },
-  {
-    "id": "ip_demo_02",
     "nombre": "JURADO NACIONAL DE ELECCIONES - JNE"
   },
   {
+    "id": "ip_demo_02",
+    "nombre": "REGISTRO NACIONAL DE IDENTIFICACIÓN Y ESTADO CIVIL - RENIEC"
+  },
+  {
     "id": "ip_demo_03",
-    "nombre": "MINISTERIO PÚBLICO"
+    "nombre": "DEFENSORÍA DEL PUEBLO"
   },
   {
     "id": "ip_demo_04",
-    "nombre": "REGISTRO NACIONAL DE IDENTIFICACIÓN Y ESTADO CIVIL - RENIEC"
+    "nombre": "MINISTERIO PÚBLICO - FISCALÍA DE LA NACIÓN"
+  },
+  {
+    "id": "ip_demo_05",
+    "nombre": "CONTRALORÍA GENERAL DE LA REPÚBLICA"
   }
 ]
