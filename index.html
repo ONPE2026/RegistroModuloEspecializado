@@ -779,6 +779,8 @@
       elemento.classList.toggle('seccion-oculta', !visible);
     }
 
+    const TIPOS_SIN_OTRO = ['partido_nacional', 'movimiento_regional'];
+
     function poblarEntidad(tipo) {
       const lista = state.catalogos[tipo] || [];
       labelEntidadSeleccion.innerHTML = (LABELS_ENTIDAD[tipo] || 'Seleccione una opción') + ' <span class="req">*</span>';
@@ -797,10 +799,13 @@
         entidadSeleccion.appendChild(option);
       });
 
-      const optionOtro = document.createElement('option');
-      optionOtro.value = 'OTRO';
-      optionOtro.textContent = 'OTRO (no está en la lista)';
-      entidadSeleccion.appendChild(optionOtro);
+      // Partidos y movimientos: solo las organizaciones que pasan a 2.ª vuelta, sin opción "OTRO"
+      if (!TIPOS_SIN_OTRO.includes(tipo)) {
+        const optionOtro = document.createElement('option');
+        optionOtro.value = 'OTRO';
+        optionOtro.textContent = 'OTRO (no está en la lista)';
+        entidadSeleccion.appendChild(optionOtro);
+      }
 
       if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) {
         entidadSeleccion.value = valorActual;
