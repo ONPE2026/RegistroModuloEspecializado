@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERM2026 - Prerregistro Módulo Especializado</title>
+  <title>Segunda Vuelta Regional - Prerregistro Módulo Especializado</title>
   <style>
     :root {
       --onpe-azul: #003366;
@@ -258,10 +258,8 @@
       max-width: 230px !important;
     }
 
-    #campoRazonSocialAuto input,
-    #razonSocialAuto,
-    #campoNombreMision input,
-    #nombreMision {
+    #campoEntidadOtro input,
+    #entidadOtro {
       width: 100%;
       min-width: 0;
       min-height: 52px;
@@ -428,8 +426,7 @@
             <label><input type="radio" name="tipoInstitucion" value="institucion_publica" /> Entidad del Estado</label>
             <label><input type="radio" name="tipoInstitucion" value="partido_nacional" /> Partidos nacionales</label>
             <label><input type="radio" name="tipoInstitucion" value="movimiento_regional" /> Movimientos regionales</label>
-            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación</label>
-            <label><input type="radio" name="tipoInstitucion" value="encuestadora_vigente" /> Encuestadoras vigentes</label>
+            <label><input type="radio" name="tipoInstitucion" value="mision_observacion" /> Misión de observación / veedor</label>
           </div>
           <div class="field-error"></div>
         </div>
@@ -442,29 +439,9 @@
           <div class="field-error"></div>
         </div>
 
-        <div class="campo seccion-oculta" id="campoNombreMision">
-          <label for="nombreMision">Ingrese el nombre de la misión de observación <span class="req">*</span></label>
-          <input id="nombreMision" type="text" maxlength="150" autocomplete="off" />
-          <div class="field-error"></div>
-        </div>
-
-        <div class="campo seccion-oculta" id="campoRucInstitucion">
-          <label for="rucInstitucion">Ingrese el RUC de la institución o entidad <span class="req">*</span></label>
-          <input id="rucInstitucion" type="text" inputmode="numeric" maxlength="11" autocomplete="off" />
-          <div class="field-error"></div>
-        </div>
-
-        <div class="campo seccion-oculta" id="campoRazonSocialAuto">
-          <label for="razonSocialAuto">Razón social <span class="req">*</span></label>
-          <input id="razonSocialAuto" type="text" readonly />
-          <div class="field-error"></div>
-        </div>
-
-        <div class="campo seccion-oculta" id="campoPaisMision">
-          <label for="paisMision">Seleccione el país de la misión de observación <span class="req">*</span></label>
-          <select id="paisMision">
-            <option value="">-- Seleccione un país --</option>
-          </select>
+        <div class="campo seccion-oculta" id="campoEntidadOtro">
+          <label for="entidadOtro">Escriba el nombre de la institución o entidad <span class="req">*</span></label>
+          <input id="entidadOtro" type="text" maxlength="150" autocomplete="off" />
           <div class="field-error"></div>
         </div>
 
@@ -559,7 +536,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxroBuEewmoml19bRnt1Uu_mWMFm4v1C39oMouPJsdpT39CbEuaE9WL3QCy64ifsjEEpA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxrHvOPP_f07yODIJ5TcbzdQ6KkODo7qO04_XIcVLjt2_5n_KlT0cq6pVioeSpoRF0UfQ/exec';
     const TAMANO_MAX_PDF_BYTES = 8 * 1024 * 1024; // 8 MB (aplica a PDF o imagen adjunta)
     const LISTAS_BASE_PATH = './';
 
@@ -567,28 +544,34 @@
       institucion_publica: 'instituciones_publicas.json',
       partido_nacional: 'partidos_nacionales.json',
       movimiento_regional: 'movimientos_regionales.json',
-      encuestadora_vigente: 'encuestadoras_vigentes.json',
-      paises: 'paises.json'
+      mision_observacion: 'misiones_observacion.json'
     };
+
+    // Token compartido: una barrera simple contra envíos automatizados directos
+    // al API_URL (bots, scripts) que no pasan por este formulario. No reemplaza
+    // una autenticación real (cualquiera que vea el código fuente lo puede ver),
+    // pero filtra el abuso casual. Debe coincidir con APP_TOKEN en Code.gs.
+    const APP_TOKEN = 'SVR-2026-prereg';
 
     const LABELS_ENTIDAD = {
       institucion_publica: 'Seleccione la entidad del Estado',
       partido_nacional: 'Seleccione el partido político o alianza nacional',
-      movimiento_regional: 'Seleccione el movimiento o alianza regional'
+      movimiento_regional: 'Seleccione el movimiento o alianza regional',
+      mision_observacion: 'Seleccione la institución veedora/observadora'
     };
 
     const PLACEHOLDERS_ENTIDAD = {
       institucion_publica: '-- Seleccione la entidad del Estado --',
       partido_nacional: '-- Seleccione el partido político o alianza nacional --',
-      movimiento_regional: '-- Seleccione el movimiento o alianza regional --'
+      movimiento_regional: '-- Seleccione el movimiento o alianza regional --',
+      mision_observacion: '-- Seleccione la institución veedora/observadora --'
     };
 
     const MAPA_TIPOS = {
       institucion_publica: 'ENTIDAD DEL ESTADO',
       partido_nacional: 'PARTIDO NACIONAL',
       movimiento_regional: 'MOVIMIENTO REGIONAL',
-      mision_observacion: 'MISIÓN DE OBSERVACIÓN',
-      encuestadora_vigente: 'ENCUESTADORAS VIGENTES'
+      mision_observacion: 'MISIÓN DE OBSERVACIÓN / VEEDOR'
     };
 
     const state = { catalogos: {}, institucionValidada: false };
@@ -599,16 +582,10 @@
     const btnValidarInstitucion = document.getElementById('btnValidarInstitucion');
     const campoTipoInstitucion = document.getElementById('campoTipoInstitucion');
     const campoEntidadSeleccion = document.getElementById('campoEntidadSeleccion');
-    const campoNombreMision = document.getElementById('campoNombreMision');
-    const campoRucInstitucion = document.getElementById('campoRucInstitucion');
-    const campoRazonSocialAuto = document.getElementById('campoRazonSocialAuto');
-    const campoPaisMision = document.getElementById('campoPaisMision');
+    const campoEntidadOtro = document.getElementById('campoEntidadOtro');
     const entidadSeleccion = document.getElementById('entidadSeleccion');
     const labelEntidadSeleccion = document.getElementById('labelEntidadSeleccion');
-    const nombreMision = document.getElementById('nombreMision');
-    const rucInstitucion = document.getElementById('rucInstitucion');
-    const razonSocialAuto = document.getElementById('razonSocialAuto');
-    const paisMision = document.getElementById('paisMision');
+    const entidadOtro = document.getElementById('entidadOtro');
     const tipoDocumento = document.getElementById('tipoDocumento');
     const numeroDocumento = document.getElementById('numeroDocumento');
     const nombres = document.getElementById('nombres');
@@ -625,10 +602,10 @@
     const btnEnviar = document.getElementById('btnEnviar');
 
     function formularioHabilitado() {
-      // ERM2026: sin fecha de apertura (el registro esta disponible desde ya).
-      // Fecha limite de registro: 4 de octubre de 2026 (hasta las 23:59, hora de Peru).
+      // Segunda Vuelta Regional: sin fecha de apertura (el registro esta disponible desde ya).
+      // Fecha limite de registro: 15 de diciembre de 2026 (hasta las 23:59, hora de Peru).
       const ahora = new Date();
-      const fechaCierre = new Date('2026-11-01T00:00:00-05:00');
+      const fechaCierre = new Date('2026-12-16T00:00:00-05:00');
       if (ahora >= fechaCierre) return 'cerrado';
       return 'abierto';
     }
@@ -646,7 +623,7 @@
         pantallaEspera.classList.remove('seccion-oculta');
         contenidoFormulario.classList.add('seccion-oculta');
         pantallaEspera.innerHTML = `
-          <img src="banner.jpg" alt="Banner ONPE ERM 2026" class="banner" />
+          <img src="banner.jpg" alt="Banner ONPE Segunda Elección Regional" class="banner" />
           <div class="pantalla-final">
             <h1 style="color:#003366;">Registro cerrado</h1>
             <p style="font-size:1.05rem; color:#4b5563;">El plazo de registro para el módulo especializado ha concluido.<br>Ya no se aceptan nuevos registros.</p>
@@ -685,21 +662,10 @@
 
       if (!state.catalogos.institucion_publica.length) {
         state.catalogos.institucion_publica = [
-          { nombre: 'JURADO NACIONAL DE ELECCIONES- JNE' },
-          { nombre: 'REGISTRO NACIONAL DE IDENTIFICACIÓN Y ESTADO CIVIL- RENIEC' },
-          { nombre: 'DEFENSORÍA DEL PUEBLO' },
-          { nombre: 'MINISTERIO PÚBLICO' }
+          { nombre: 'JURADO NACIONAL DE ELECCIONES - JNE' },
+          { nombre: 'REGISTRO NACIONAL DE IDENTIFICACIÓN Y ESTADO CIVIL - RENIEC' }
         ];
       }
-
-      if (state.catalogos.encuestadora_vigente.length) {
-        state.catalogos.encuestadora_vigente = state.catalogos.encuestadora_vigente.map(x => ({
-          nombre: String(x.nombre || '').toUpperCase().trim(),
-          ruc: String(x.ruc || '').replace(/\D+/g, '').trim()
-        }));
-      }
-
-      poblarPaises();
     }
 
     function configurarEventos() {
@@ -716,39 +682,13 @@
         resetValidacionInstitucion();
         limpiarError(campoEntidadSeleccion);
         ocultarMensajeGlobal();
+        actualizarCampoOtro();
       });
 
-      nombreMision.addEventListener('input', () => {
-        nombreMision.value = nombreMision.value.toUpperCase();
+      entidadOtro.addEventListener('input', () => {
+        entidadOtro.value = entidadOtro.value.toUpperCase();
         resetValidacionInstitucion();
-        limpiarError(campoNombreMision);
-        ocultarMensajeGlobal();
-      });
-
-      rucInstitucion.addEventListener('input', () => {
-        rucInstitucion.value = soloDigitos(rucInstitucion.value).slice(0, 11);
-        resetValidacionInstitucion();
-        limpiarError(campoRucInstitucion);
-        limpiarError(campoRazonSocialAuto);
-        ocultarMensajeGlobal();
-
-        const tipo = obtenerTipoInstitucionSeleccionado();
-
-        if (tipo === 'encuestadora_vigente') {
-          const enc = buscarEncuestadoraPorRuc(rucInstitucion.value);
-          if (rucInstitucion.value.length === 11 && enc) {
-            razonSocialAuto.value = enc.nombre || '';
-            campoRazonSocialAuto.classList.remove('seccion-oculta');
-          } else {
-            razonSocialAuto.value = '';
-            campoRazonSocialAuto.classList.add('seccion-oculta');
-          }
-        }
-      });
-
-      paisMision.addEventListener('change', () => {
-        resetValidacionInstitucion();
-        limpiarError(campoPaisMision);
+        limpiarError(campoEntidadOtro);
         ocultarMensajeGlobal();
       });
 
@@ -800,11 +740,6 @@
       form.addEventListener('submit', enviarFormulario);
     }
 
-    function buscarEncuestadoraPorRuc(ruc) {
-      const lista = state.catalogos.encuestadora_vigente || [];
-      return lista.find(item => String(item.ruc || '').trim() === String(ruc || '').trim()) || null;
-    }
-
     function resetValidacionInstitucion() {
       state.institucionValidada = false;
       parte2.classList.add('seccion-oculta');
@@ -816,19 +751,9 @@
 
     function actualizarCamposCondicionales() {
       const tipo = obtenerTipoInstitucionSeleccionado();
-      const esEncuestadora = tipo === 'encuestadora_vigente';
-      const esMision = tipo === 'mision_observacion';
-
-      const mostrarEntidad = Boolean(tipo) && !esEncuestadora && !esMision;
-      const mostrarNombreMision = esMision;
-      const mostrarRuc = esEncuestadora;
-      const mostrarPais = esMision;
+      const mostrarEntidad = Boolean(tipo);
 
       toggleSeccion(campoEntidadSeleccion, mostrarEntidad);
-      toggleSeccion(campoNombreMision, mostrarNombreMision);
-      toggleSeccion(campoRucInstitucion, mostrarRuc);
-      toggleSeccion(campoPaisMision, mostrarPais);
-      toggleSeccion(campoRazonSocialAuto, false);
 
       if (mostrarEntidad) {
         poblarEntidad(tipo);
@@ -838,24 +763,15 @@
         limpiarError(campoEntidadSeleccion);
       }
 
-      if (!mostrarNombreMision) {
-        nombreMision.value = '';
-        limpiarError(campoNombreMision);
-      }
+      actualizarCampoOtro();
+    }
 
-      if (!mostrarRuc) {
-        rucInstitucion.value = '';
-        limpiarError(campoRucInstitucion);
-      }
-
-      if (!mostrarPais) {
-        paisMision.value = '';
-        limpiarError(campoPaisMision);
-      }
-
-      if (!esEncuestadora) {
-        razonSocialAuto.value = '';
-        limpiarError(campoRazonSocialAuto);
+    function actualizarCampoOtro() {
+      const mostrarOtro = Boolean(obtenerTipoInstitucionSeleccionado()) && entidadSeleccion.value === 'OTRO';
+      toggleSeccion(campoEntidadOtro, mostrarOtro);
+      if (!mostrarOtro) {
+        entidadOtro.value = '';
+        limpiarError(campoEntidadOtro);
       }
     }
 
@@ -881,20 +797,14 @@
         entidadSeleccion.appendChild(option);
       });
 
+      const optionOtro = document.createElement('option');
+      optionOtro.value = 'OTRO';
+      optionOtro.textContent = 'OTRO (no está en la lista)';
+      entidadSeleccion.appendChild(optionOtro);
+
       if ([...entidadSeleccion.options].some(opt => opt.value === valorActual)) {
         entidadSeleccion.value = valorActual;
       }
-    }
-
-    function poblarPaises() {
-      const lista = state.catalogos.paises || [];
-      paisMision.innerHTML = '<option value="">-- Seleccione un país --</option>';
-      lista.forEach((item) => {
-        const option = document.createElement('option');
-        option.value = String(item.nombre || '').toUpperCase();
-        option.textContent = String(item.nombre || '').toUpperCase();
-        paisMision.appendChild(option);
-      });
     }
 
     function obtenerTipoInstitucionSeleccionado() {
@@ -956,9 +866,7 @@
     }
 
     function obtenerEntidadNombreActual() {
-      const tipo = obtenerTipoInstitucionSeleccionado();
-      if (tipo === 'encuestadora_vigente') return valorLimpio(razonSocialAuto.value).toUpperCase();
-      if (tipo === 'mision_observacion') return valorLimpio(nombreMision.value).toUpperCase();
+      if (entidadSeleccion.value === 'OTRO') return valorLimpio(entidadOtro.value).toUpperCase();
       return valorLimpio(entidadSeleccion.value).toUpperCase();
     }
 
@@ -966,39 +874,19 @@
       if (modo === 'submit') {
         limpiarError(campoTipoInstitucion);
         limpiarError(campoEntidadSeleccion);
-        limpiarError(campoNombreMision);
-        limpiarError(campoRucInstitucion);
-        limpiarError(campoRazonSocialAuto);
-        limpiarError(campoPaisMision);
+        limpiarError(campoEntidadOtro);
       }
 
       const errores = [];
       const tipo = obtenerTipoInstitucionSeleccionado();
       const entidadNombre = obtenerEntidadNombreActual();
-      const paisNombre = valorLimpio(paisMision.value).toUpperCase();
-      const ruc = soloDigitos(rucInstitucion.value);
 
       if (!tipo) errores.push({ campo: campoTipoInstitucion, mensaje: 'Seleccione el tipo de institución o entidad.' });
 
-      if (tipo === 'mision_observacion' && !entidadNombre) {
-        errores.push({ campo: campoNombreMision, mensaje: 'Ingrese el nombre de la misión de observación.' });
-      }
-
-      if (tipo !== 'encuestadora_vigente' && tipo !== 'mision_observacion' && !campoEntidadSeleccion.classList.contains('seccion-oculta') && !entidadNombre) {
+      if (tipo && !entidadSeleccion.value) {
         errores.push({ campo: campoEntidadSeleccion, mensaje: 'Seleccione una opción de la lista correspondiente.' });
-      }
-
-      if (!campoRucInstitucion.classList.contains('seccion-oculta')) {
-        if (!ruc) errores.push({ campo: campoRucInstitucion, mensaje: 'Ingrese el RUC de la institución o entidad.' });
-        else if (!/^\d{11}$/.test(ruc)) errores.push({ campo: campoRucInstitucion, mensaje: 'El RUC debe tener exactamente 11 dígitos.' });
-      }
-
-      if (tipo === 'encuestadora_vigente' && !entidadNombre) {
-        errores.push({ campo: campoRucInstitucion, mensaje: 'El RUC no corresponde a una encuestadora vigente registrada.' });
-      }
-
-      if (!campoPaisMision.classList.contains('seccion-oculta') && !paisNombre) {
-        errores.push({ campo: campoPaisMision, mensaje: 'Seleccione el país de la misión de observación.' });
+      } else if (entidadSeleccion.value === 'OTRO' && !entidadNombre) {
+        errores.push({ campo: campoEntidadOtro, mensaje: 'Escriba el nombre de la institución o entidad.' });
       }
 
       if (modo === 'submit' && errores.length) {
@@ -1124,36 +1012,23 @@
 
       const tipo = obtenerTipoInstitucionSeleccionado();
       const entidadNombre = obtenerEntidadNombreActual();
-      const paisNombre = valorLimpio(paisMision.value).toUpperCase();
 
       try {
         btnValidarInstitucion.disabled = true;
-        mostrarMensajeGlobal('Validando si ya existe un registro...', 'info');
+        mostrarMensajeGlobal('Validando...', 'info');
 
         const data = await consultarRegistroConReintentos({
           action: 'checkInstitution',
+          appToken: APP_TOKEN,
           tipoInstitucion: tipo,
-          entidadNombre,
-          paisNombre
+          entidadNombre
         });
-
-        if (data.status === 'duplicate') {
-          const targetCampo = tipo === 'encuestadora_vigente'
-            ? campoRucInstitucion
-            : (tipo === 'mision_observacion' ? campoNombreMision : campoEntidadSeleccion);
-          mostrarError(targetCampo, 'Esta institución o entidad ya cuenta con un registro previo y no puede volver a registrarse.');
-          mostrarMensajeGlobal('La institución o entidad seleccionada ya se encuentra registrada.', 'error');
-          parte2.classList.add('seccion-oculta');
-          state.institucionValidada = false;
-          targetCampo.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          return;
-        }
 
         if (data.status !== 'available') throw new Error(data.message || 'No se pudo validar el registro.');
 
         state.institucionValidada = true;
         parte2.classList.remove('seccion-oculta');
-        mostrarMensajeGlobal('La institución o entidad no presenta un registro previo. Puede continuar.', 'ok');
+        mostrarMensajeGlobal('Puede continuar con el registro.', 'ok');
         parte2.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (error) {
         console.error(error);
@@ -1168,11 +1043,10 @@
       const docVal = valorLimpio(numeroDocumento.value).toUpperCase();
       return {
         action: 'submitRegistration',
+        appToken: APP_TOKEN,
         tipoInstitucion: tipo,
         tipoInstitucionLabel: MAPA_TIPOS[tipo] || '',
         entidadNombre: obtenerEntidadNombreActual(),
-        paisNombre: valorLimpio(paisMision.value).toUpperCase(),
-        ruc: soloDigitos(rucInstitucion.value),
         tipoDocumento: tipoDocumento.value,
         tipoDocumentoLabel: tipoDocumento.options[tipoDocumento.selectedIndex]
           ? tipoDocumento.options[tipoDocumento.selectedIndex].textContent.toUpperCase()

@@ -1,9 +1,14 @@
 /**
- * ERM2026 - Prerregistro Módulo Especializado
+ * Segunda Vuelta Regional - Prerregistro Módulo Especializado
  * Backend en Google Apps Script para el formulario index.html.
  *
+ * IMPORTANTE: este es un proceso de registro NUEVO e independiente del de
+ * ERM2026 (primera vuelta). Usa una Google Sheet nueva y una carpeta de
+ * Drive nueva (no reutilices las de la primera vuelta), para no mezclar los
+ * datos de ambos procesos.
+ *
  * CÓMO USARLO:
- * 1. Crea una Google Sheet nueva (o usa una que ya tengas para ERM2026).
+ * 1. Crea una Google Sheet nueva para la Segunda Vuelta Regional.
  * 2. En esa Sheet: Extensiones > Apps Script.
  * 3. Borra el contenido de Code.gs que aparece por defecto y pega este archivo completo.
  * 4. Ajusta, si quieres, el nombre de la hoja en SHEET_NAME y el ID de la carpeta
@@ -29,7 +34,14 @@ const SHEET_NAME = 'Registros';
 // ID de la carpeta de Drive donde se guardan los PDF firmados.
 // Es la parte final de la URL de la carpeta:
 // https://drive.google.com/drive/folders/ESTE_ES_EL_ID
-const DRIVE_FOLDER_ID = '1JmDr6zYHMZYyF8sF5kyCbgSxDCrZ2lo2';
+const DRIVE_FOLDER_ID = 'PEGAR_AQUI_ID_CARPETA_DRIVE';
+
+// Token compartido: debe coincidir exactamente con APP_TOKEN en index.html.
+// Es una barrera simple contra envios automatizados directos a esta URL
+// (bots, scripts) que no pasan por el formulario real. No es una autenticacion
+// fuerte (cualquiera que vea el codigo fuente de la pagina lo puede ver), pero
+// filtra el abuso casual de quien solo encuentra la URL.
+const APP_TOKEN = 'SVR-2026-prereg';
 
 // Columnas cuyo valor puede empezar con '+' (como el celular con código de país)
 // y por eso deben forzarse a texto, o Sheets las toma como el inicio de una fórmula.
@@ -42,8 +54,6 @@ const COLUMNAS = [
   'tipoInstitucion',
   'tipoInstitucionLabel',
   'entidadNombre',
-  'paisNombre',
-  'ruc',
   'tipoDocumento',
   'tipoDocumentoLabel',
   'numeroDocumento',
@@ -57,6 +67,11 @@ const COLUMNAS = [
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
+
+    if (body.appToken !== APP_TOKEN) {
+      return responderJson({ status: 'error', message: 'Solicitud no autorizada.' });
+    }
+
     const action = body.action;
 
     if (action === 'checkInstitution') {
@@ -76,42 +91,16 @@ function doPost(e) {
 // Algunos navegadores (sendBeacon con no-cors, o llamadas de prueba) hacen GET;
 // respondemos algo simple para que no truene si alguien abre la URL directo.
 function doGet(e) {
-  return ContentService.createTextOutput('ERM2026 - Prerregistro: endpoint activo.')
+  return ContentService.createTextOutput('Segunda Vuelta Regional - Prerregistro: endpoint activo.')
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
+// A partir de la Segunda Vuelta Regional se permite más de una persona
+// registrada por la misma organización/institución, así que esta función
+// ya no bloquea por duplicado: siempre deja continuar al paso 2. Se deja la
+// accion 'checkInstitution' (y esta funcion) por compatibilidad con el
+// frontend, que todavia la llama antes de mostrar el resto del formulario.
 function manejarCheckInstitution(body) {
-  // Solo lectura: no se usa LockService (si otro envío con PDF tenía el candado,
-  // la validación se quedaba esperando). Además se leen únicamente las columnas
-  // necesarias (tipoInstitucion .. paisNombre) en vez de toda la hoja.
-  const hoja = obtenerHoja();
-  const ultimaFila = hoja.getLastRow();
-  if (ultimaFila < 2) return { status: 'available' };
-
-  const idxTipo = COLUMNAS.indexOf('tipoInstitucion');
-  const idxEntidad = COLUMNAS.indexOf('entidadNombre');
-  const idxPais = COLUMNAS.indexOf('paisNombre');
-  const primeraCol = idxTipo + 1;
-  const numCols = idxPais - idxTipo + 1;
-
-  const filas = hoja.getRange(2, primeraCol, ultimaFila - 1, numCols).getValues();
-
-  const tipo = normalizar(body.tipoInstitucion);
-  const entidadNombre = normalizar(body.entidadNombre);
-  const paisNombre = normalizar(body.paisNombre);
-
-  for (let i = 0; i < filas.length; i++) {
-    const fila = filas[i];
-    if (normalizar(fila[0]) !== tipo) continue;
-    if (normalizar(fila[idxEntidad - idxTipo]) !== entidadNombre) continue;
-
-    if (tipo === 'mision_observacion') {
-      if (normalizar(fila[idxPais - idxTipo]) === paisNombre) return { status: 'duplicate' };
-    } else {
-      return { status: 'duplicate' };
-    }
-  }
-
   return { status: 'available' };
 }
 
@@ -155,24 +144,12 @@ function manejarSubmitRegistration(body) {
 }
 
 /**
- * Decide el nombre de archivo según el tipo de institución:
- * - Organización política: el nombre de la organización.
- * - Encuestadora vigente: el nombre (razón social) de la encuestadora.
- * - Institución pública / misión de observación: un ID según el número de
- *   respuesta (ID_1, ID_2, ...), porque no hay un nombre corto disponible.
+ * Decide el nombre de archivo: usa el nombre de la institucion/entidad
+ * (de la lista o escrito a mano en "Otro"), y si por algun motivo viene
+ * vacio, cae a un ID segun el numero de respuesta.
  */
 function construirNombreArchivo(body, numeroRespuesta) {
-  const tipo = body.tipoInstitucion;
-  let base;
-
-  if (tipo === 'partido_nacional' || tipo === 'movimiento_regional' || tipo === 'encuestadora_vigente') {
-    base = body.entidadNombre;
-  }
-
-  if (!base) {
-    base = 'ID_' + numeroRespuesta;
-  }
-
+  const base = body.entidadNombre || ('ID_' + numeroRespuesta);
   return sanitizarNombreArchivo(base);
 }
 
